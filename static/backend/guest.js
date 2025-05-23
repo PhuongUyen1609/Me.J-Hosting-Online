@@ -5,26 +5,7 @@
  * Integrates advanced gestures, Tone.js effects, crossfader, and effect carousel from script.js
  * Dependencies: Tone.js, WaveSurfer.js, MediaPipe Hands, jsmediatags, TabAudioAnalyzer
  */
-// Global shared effect chain
-// const sharedEffects = {
-//     effectInput: new Tone.Gain(1),
-//     delay: new Tone.FeedbackDelay({ delayTime: 0, feedback: 0.5, wet: 0 }),
-//     distortion: new Tone.Distortion({ distortion: 0, wet: 0 }),
-//     pitchShift: new Tone.PitchShift({ pitch: 0, wet: 0 }),
-//     reverb: new Tone.Reverb({ decay: 2, wet: 0 }),
-//     lowpassFilter: new Tone.Filter({ type: 'lowpass', frequency: 20000, Q: 1 }),
-//     highpassFilter: new Tone.Filter({ type: 'highpass', frequency: 200, Q: 1 }),
-//     finalGain: new Tone.Gain(1).toDestination()
-// };
-// sharedEffects.effectInput.chain(
-//     sharedEffects.delay,
-//     sharedEffects.distortion,
-//     sharedEffects.pitchShift,
-//     sharedEffects.reverb,
-//     sharedEffects.lowpassFilter,
-//     sharedEffects.highpassFilter,
-//     sharedEffects.finalGain
-// );
+
 
 let audioCtx = null;
 let sharedEffects = null;
@@ -64,7 +45,9 @@ let musicLockToggleState = 0;
 let lastEffectToggleTime = 0;
 const effectToggleDelay = 600;
 
-
+// RECORD
+let audioDestination = null;
+window.audioDestination = audioDestination;
 
 async function initializePlayers() {
     try {
@@ -205,6 +188,10 @@ async function initializeAudioContext() {
         });
     }
 
+    //RECORD
+    audioDestination = window.audioDestination = audioCtx.createMediaStreamDestination();
+    sharedEffects.highpassFilter.connect(audioDestination);
+
     return audioCtx;
 }
 
@@ -213,10 +200,10 @@ function initializeEventListeners() {
     console.log("[Guest.js] Initializing event listeners...");
     const volumeSliderA = document.getElementById("volumeSlider");
     if (volumeSliderA) {
-        volumeSliderA.value = 50;
+        volumeSliderA.value = 100;
         volumeSliderA.addEventListener("input", () => {
             const volumePercent = parseInt(volumeSliderA.value);
-            const volumeValue = volumePercent === 0 ? -Infinity : (volumePercent / 100) * 60 - 60;
+            const volumeValue = volumePercent === 0 ? -Infinity : -60 * Math.pow(1 - (volumePercent / 100), 2); //Volume slider fixed
             playerAData.effects.volume.volume.setValueAtTime(volumeValue, Tone.now());
             playerAData.state.volume = volumePercent / 100;
             document.getElementById("volumeStatus").textContent = `${volumePercent}%`;
@@ -225,10 +212,10 @@ function initializeEventListeners() {
     }
     const volumeSliderB = document.getElementById("volumeSliderB");
     if (volumeSliderB) {
-        volumeSliderB.value = 50;
+        volumeSliderB.value = 100;
         volumeSliderB.addEventListener("input", () => {
             const volumePercent = parseInt(volumeSliderB.value);
-            const volumeValue = volumePercent === 0 ? -Infinity : (volumePercent / 100) * 60 - 60;
+            const volumeValue = volumePercent === 0 ? -Infinity : -60 * Math.pow(1 - (volumePercent / 100), 2); //Volume slider fixed
             playerBData.effects.volume.volume.setValueAtTime(volumeValue, Tone.now());
             playerBData.state.volume = volumePercent / 100;
             document.getElementById("volumeStatusB").textContent = `${volumePercent}%`;
@@ -679,75 +666,6 @@ function updateAllEffectStatusDisplays() {
 let lastCrossfaderUpdate = 0;
 const CROSSFADER_UPDATE_INTERVAL = 50; // Throttle to 20 updates/sec (50ms)
 
-// Helper function to bypass delay and reverb for muted decks
-// function updateEffectBypass() {
-//     const isDeckAMuted = playerAData.effects.gain.gain.value < 0.001;
-//     const isDeckBMuted = playerBData.effects.gain.gain.value < 0.001;
-//     // Bypass delay and reverb if both decks are muted or one is fully active
-//     if ((isDeckAMuted && isDeckBMuted) || (isDeckAMuted && !isDeckBMuted) || (!isDeckAMuted && isDeckBMuted)) {
-//         sharedEffects.delay.wet.setValueAtTime(0, Tone.now());
-//         sharedEffects.reverb.wet.setValueAtTime(0, Tone.now());
-//     } else {
-//         // Restore effect levels when both decks are active
-//         sharedEffects.delay.wet.setValueAtTime(0.5, Tone.now());
-//         sharedEffects.reverb.wet.setValueAtTime(1, Tone.now());
-//     }
-// }
-
-// function updateCrossfader() {
-//     const now = performance.now();
-//     if (now - lastCrossfaderUpdate < CROSSFADER_UPDATE_INTERVAL) {
-//         return; // Throttle updates
-//     }
-//     lastCrossfaderUpdate = now;
-
-//     // Ensure audio context is running
-//     if (Tone.context.state !== 'running') {
-//         console.warn('Audio context not running. Resuming...');
-//         Tone.start().catch(err => console.error('Tone.js start failed:', err));
-//         return;
-//     }
-
-//     // Validate gain nodes
-//     if (!playerAData.effects.gain || !playerAData.effects.gain.gain) {
-//         console.error('Deck A gain node invalid. Reinitializing...');
-//         playerAData.effects.gain = new Tone.Gain(1).connect(playerAData.effects.volume);
-//         if (playerAData.player) {
-//             playerAData.player.connect(playerAData.effects.gain);
-//         }
-//     }
-//     if (!playerBData.effects.gain || !playerBData.effects.gain.gain) {
-//         console.error('Deck B gain node invalid. Reinitializing...');
-//         playerBData.effects.gain = new Tone.Gain(1).connect(playerBData.effects.volume);
-//         if (playerBData.player) {
-//             playerBData.player.connect(playerBData.effects.gain);
-//         }
-//     }
-
-//     // Clamp crossfader position
-//     const normalizedValue = Math.min(1, Math.max(0, crossfaderPosition));
-
-//     // Linear curve for predictable muting
-//     const gainAValue = 1 - normalizedValue; // 1 at 0, 0 at 1
-//     const gainBValue = normalizedValue; // 0 at 0, 1 at 1
-
-//     // Apply gains with strict zeroing
-//     playerAData.effects.gain.gain.setValueAtTime(gainAValue < 0.001 ? 0 : gainAValue, Tone.now());
-//     playerBData.effects.gain.gain.setValueAtTime(gainBValue < 0.001 ? 0 : gainBValue, Tone.now());
-
-//     // Update effect bypass to prevent residual audio
-//     // updateEffectBypass();
-
-//     // Update UI
-//     const crossfaderSlider = document.getElementById("crossfader");
-//     if (crossfaderSlider) {
-//         crossfaderSlider.value = Math.round(normalizedValue * 100);
-//     }
-//     document.getElementById("crossfaderStatus").textContent = `${Math.round(normalizedValue * 100)}%`;
-
-//     // Debug logging
-//     console.log(`Crossfader: ${normalizedValue}, Gain A: ${gainAValue}, Gain B: ${gainBValue}, Actual A: ${playerAData.effects.gain.gain.value}, Actual B: ${playerBData.effects.gain.gain.value}`);
-// }
 
 function updateCrossfader(position) {
     // Clamp the position to ensure it stays between 0 and 1
@@ -1192,10 +1110,12 @@ function onResults(results) {
     }
 }
 
+
 async function startPlaying(playerData) {
     try {
         await initializeAudioContext();
         await ensureContextRunning();
+
         if (playerData.player && playerData.state.currentSongIndex !== -1) {
             if (!playerData.player.loaded) {
                 console.warn(`[Guest.js] Tone.Player not loaded for ${playerData.id}. Waiting for load event.`);
@@ -1204,21 +1124,41 @@ async function startPlaying(playerData) {
                 };
                 return;
             }
+
+            const buttonId = playerData.id === "deck-a" ? "playStopBtn" : "playStopBtnB"; //Add for play/pause button - New
+            const button = document.getElementById(buttonId);
+
             if (playerData.isPlaying) {
+                // Pause
+                const elapsed = playerData.player.context.currentTime - playerData.playbackStartTime;
+                playerData.state.currentTime = playerData.playbackOffset + elapsed;
+
                 playerData.player.stop();
                 playerData.isPlaying = false;
-                playerData.playbackStartTime = null; // Reset start time
+                playerData.playbackStartTime = null;
+
+                if (playerData.progressInterval) {
+                    clearInterval(playerData.progressInterval);
+                    playerData.progressInterval = null;
+                }
+
                 updateMusicInfo(playerData, "Paused");
-                document.getElementById(playerData.id === "deck-a" ? "playStopBtn" : "playStopBtnB").textContent = "Play";
-                renderWaveform(playerData); // Redraw waveform to show paused state
+                button.classList.remove('playing'); // Remove .playing class to show play icon - New
+                renderWaveform(playerData);
             } else {
-                playerData.playbackStartTime = playerData.player.context.currentTime; // Set start time
-                playerData.player.start();
+                // Resume
+                const offset = playerData.state.currentTime || 0;
+                playerData.playbackOffset = offset;
+                playerData.playbackStartTime = playerData.player.context.currentTime;
+
+                playerData.player.start(Tone.now(), offset);
+
                 playerData.isPlaying = true;
                 updateMusicInfo(playerData, "Playing");
-                document.getElementById(playerData.id === "deck-a" ? "playStopBtn" : "playStopBtnB").textContent = "Pause";
+                button.classList.add('playing'); // Add .playing class to show pause icon - New
+                updateProgress(playerData);
             }
-            updateProgress(playerData);
+
         } else {
             console.warn(`[Guest.js] Cannot start playback for ${playerData.id}: No song loaded or Tone.Player not initialized`);
             updateMusicInfo(playerData, "No track loaded");
@@ -1227,61 +1167,17 @@ async function startPlaying(playerData) {
         console.error(`[Guest.js] Error starting playback for ${playerData.id}:`, err);
         updateMusicInfo(playerData, "Error starting playback");
     }
+
+    // Toggle spinning animation based on play state
+    const coverArtElement = document.getElementById(`${playerData.id}-coverArt`);
+    if (coverArtElement) {
+        if (playerData.isPlaying) {
+            coverArtElement.classList.add('spinning');
+        } else {
+            coverArtElement.classList.remove('spinning');
+        }
+    }
 }
-// async function startPlaying(playerData) {
-//     try {
-//         await initializeAudioContext();
-//         await ensureContextRunning();
-
-//         if (playerData.player && playerData.state.currentSongIndex !== -1) {
-//             if (!playerData.player.loaded) {
-//                 console.warn(`[Guest.js] Tone.Player not loaded for ${playerData.id}. Waiting for load event.`);
-//                 playerData.player.onload = () => {
-//                     startPlaying(playerData);
-//                 };
-//                 return;
-//             }
-
-//             if (playerData.isPlaying) {
-//                 // Pause
-//                 const elapsed = playerData.player.context.currentTime - playerData.playbackStartTime;
-//                 playerData.state.currentTime = playerData.playbackOffset + elapsed;
-
-//                 playerData.player.stop();
-//                 playerData.isPlaying = false;
-//                 playerData.playbackStartTime = null;
-
-//                 if (playerData.progressInterval) {
-//                     clearInterval(playerData.progressInterval);
-//                     playerData.progressInterval = null;
-//                 }
-
-//                 updateMusicInfo(playerData, "Paused");
-//                 document.getElementById(playerData.id === "deck-a" ? "playStopBtn" : "playStopBtnB").textContent = "Play";
-//                 renderWaveform(playerData);
-//             } else {
-//                 // Resume
-//                 const offset = playerData.state.currentTime || 0;
-//                 playerData.playbackOffset = offset;
-//                 playerData.playbackStartTime = playerData.player.context.currentTime;
-
-//                 playerData.player.start(Tone.now(), offset);
-
-//                 playerData.isPlaying = true;
-//                 updateMusicInfo(playerData, "Playing");
-//                 document.getElementById(playerData.id === "deck-a" ? "playStopBtn" : "playStopBtnB").textContent = "Pause";
-//                 updateProgress(playerData);
-//             }
-
-//         } else {
-//             console.warn(`[Guest.js] Cannot start playback for ${playerData.id}: No song loaded or Tone.Player not initialized`);
-//             updateMusicInfo(playerData, "No track loaded");
-//         }
-//     } catch (err) {
-//         console.error(`[Guest.js] Error starting playback for ${playerData.id}:`, err);
-//         updateMusicInfo(playerData, "Error starting playback");
-//     }
-// }
 
 function updateVolume(playerData, source) {
     const volumePercent = playerData.state.volume * 100;
@@ -1362,6 +1258,12 @@ function handleFileUpload(event, playerData) {
 }
 
 function deleteSong(playerData) {
+    // Stop spinning animation
+    const coverArtElement = document.getElementById(`${playerData.id}-coverArt`);
+    if (coverArtElement) {
+        coverArtElement.classList.remove('spinning');
+    }
+    
     if (playerData.state.currentSongIndex >= 0 && playerData.state.currentSongIndex < playerData.state.playlist.length) {
         const songToRemove = playerData.state.playlist[playerData.state.currentSongIndex];
         const songIdToRemove = songToRemove.id;
@@ -1491,6 +1393,7 @@ async function loadSong(playerData, index) {
         if (playerData.player.state === "started") {
             playerData.player.stop();
         }
+
         playerData.playbackStartTime = null;
 
         await playerData.player.load(song.url);
@@ -1520,9 +1423,9 @@ async function loadSong(playerData, index) {
             }
         }
 
-        // Smooth the waveform data (simple moving average)
+        // Smooth the waveform data
         const smoothedData = new Float32Array(numSamples);
-        const smoothingWindow = 5; // Number of points to average
+        const smoothingWindow = 5;
         for (let i = 0; i < numSamples; i++) {
             let sum = 0;
             let count = 0;
@@ -1536,7 +1439,6 @@ async function loadSong(playerData, index) {
 
         renderWaveform(playerData);
 
-        // Set cover art or placeholder (already handled here, so no need for updateCoverArt)
         if (song.cover) {
             coverArtElement.style.backgroundImage = `url('${song.cover}')`;
             coverArtElement.setAttribute("data-song-cover", song.cover);
@@ -1546,10 +1448,10 @@ async function loadSong(playerData, index) {
         }
 
         updateMusicInfo(playerData, song.name);
-        // Remove the call to updateCoverArt since it's redundant
-        // updateCoverArt(playerData, index); // <-- Removed
+        playerData.state.currentTime = 0; // ✅ Reset vị trí phát khi load bài mới
         updateProgressBar(playerData, 0, playerData.state.duration);
         renderMainPlaylist();
+
         console.log(`[Guest.js] Loaded song ${song.name} for ${playerData.id}, duration: ${playerData.state.duration.toFixed(2)}s`);
 
         playerData.player.onstop = () => {
@@ -1560,23 +1462,6 @@ async function loadSong(playerData, index) {
             updateProgressBar(playerData, 0, playerData.state.duration);
             updateProgress(playerData);
             renderWaveform(playerData);
-            const nextIndex = playerData.state.currentSongIndex + 1;
-            const otherPlayer = playerData.id === "deck-a" ? playerBData : playerAData;
-            if (nextIndex < playerData.state.playlist.length) {
-                loadSong(playerData, nextIndex);
-                playerData.player.onload = () => {
-                    if (playerData.player.loaded && !playerData.isPlaying) {
-                        playerData.player.start();
-                    }
-                };
-            } else if (otherPlayer.state.currentSongIndex + 1 < otherPlayer.state.playlist.length) {
-                loadSong(otherPlayer, otherPlayer.state.currentSongIndex + 1);
-                otherPlayer.player.onload = () => {
-                    if (otherPlayer.player.loaded && !otherPlayer.isPlaying) {
-                        otherPlayer.player.start();
-                    }
-                };
-            }
             renderMainPlaylist();
         };
     } catch (error) {
@@ -1646,7 +1531,7 @@ function renderWaveform(playerData) {
         ctx.lineTo(x, y);
         ctx.lineTo(x, height - y);
     }
-    ctx.strokeStyle = playerData.id === "deck-a" ? "#FF335F" : "#3F5AD5"; // Progress color (red for A, blue for B)
+    ctx.strokeStyle = playerData.id === "deck-a" ? "#FF335F" : "#3e61ff"; // Progress color (red for A, blue for B)
     ctx.lineWidth = 1;
     ctx.stroke();
 
@@ -1682,19 +1567,7 @@ function updateMusicInfo(playerData, status) {
     }
 }
 
-// function updateCoverArt(playerData, songIndex) {
-//     const coverElementId = `${playerData.id}-coverArt`;
-//     const coverElement = document.getElementById(coverElementId);
-//     if (coverElement && songIndex >= 0 && songIndex < playerData.state.playlist.length) {
-//         const song = playerData.state.playlist[songIndex];
-//         const coverUrl = (song && song.cover && song.cover !== "") ? song.cover : '';
-//         coverElement.style.backgroundImage = `url('${coverUrl}')`;
-//         coverElement.style.backgroundSize = 'cover';
-//         coverElement.style.backgroundPosition = 'center';
-//     } else if (coverElement) {
-//         coverElement.style.backgroundImage = "none";
-//     }
-// }
+
 
 function updateCoverArt(playerData, songIndex) {
     const coverElementId = `${playerData.id}-coverArt`;
@@ -1713,81 +1586,51 @@ function updateCoverArt(playerData, songIndex) {
     }
 }
 
+
 function updateProgress(playerData) {
     if (playerData.progressInterval) {
         clearInterval(playerData.progressInterval);
         playerData.progressInterval = null;
     }
+
     if (playerData.isPlaying && playerData.player && playerData.player.loaded && playerData.playbackStartTime !== null) {
         playerData.progressInterval = setInterval(() => {
             if (!playerData.isPlaying || !playerData.player || !playerData.player.loaded) {
-                if (playerData.progressInterval) {
-                    clearInterval(playerData.progressInterval);
-                    playerData.progressInterval = null;
-                }
+                clearInterval(playerData.progressInterval);
+                playerData.progressInterval = null;
                 return;
             }
+
             try {
-                
-                const currentTime = playerData.player.context.currentTime - playerData.playbackStartTime;
-                const duration = playerData.state.duration;
-                playerData.state.currentTime = currentTime;
-                updateProgressBar(playerData, currentTime, duration);
-                renderWaveform(playerData); // Redraw waveform to update progress
-                if (currentTime >= duration) {
+                const elapsed = playerData.player.context.currentTime - playerData.playbackStartTime;
+                const currentTime = (playerData.playbackOffset || 0) + elapsed;
+                const duration = playerData.state.duration || 1;
+
+                playerData.state.currentTime = Math.min(currentTime, duration);
+
+                updateProgressBar(playerData, playerData.state.currentTime, duration);
+                renderWaveform(playerData);
+
+                if (playerData.state.currentTime >= duration) {
                     clearInterval(playerData.progressInterval);
                     playerData.progressInterval = null;
+
+                    playerData.player.stop();
+                    playerData.isPlaying = false;
+                    playerData.playbackStartTime = null;
+                    playerData.state.currentTime = 0;
+                    playerData.playbackOffset = 0;
+
+                    updateMusicInfo(playerData, "Finished");
+                    document.getElementById(playerData.id === "deck-a" ? "playStopBtn" : "playStopBtnB").textContent = "Play";
+                    renderWaveform(playerData);
                 }
             } catch (error) {
                 console.error(`[Interval - ${playerData.id}] Error updating progress:`, error);
             }
-        }, 50); // Update more frequently for smoother movement
+        }, 100);
     }
 }
-// function updateProgress(playerData) {
-//     if (playerData.progressInterval) {
-//         clearInterval(playerData.progressInterval);
-//         playerData.progressInterval = null;
-//     }
-
-//     if (playerData.isPlaying && playerData.player && playerData.player.loaded && playerData.playbackStartTime !== null) {
-//         playerData.progressInterval = setInterval(() => {
-//             if (!playerData.isPlaying || !playerData.player || !playerData.player.loaded) {
-//                 clearInterval(playerData.progressInterval);
-//                 playerData.progressInterval = null;
-//                 return;
-//             }
-
-//             try {
-//                 const elapsed = playerData.player.context.currentTime - playerData.playbackStartTime;
-//                 const currentTime = (playerData.playbackOffset || 0) + elapsed;
-//                 const duration = playerData.state.duration || 1;
-
-//                 playerData.state.currentTime = Math.min(currentTime, duration);
-
-//                 updateProgressBar(playerData, playerData.state.currentTime, duration);
-//                 renderWaveform(playerData);
-
-//                 if (playerData.state.currentTime >= duration) {
-//                     clearInterval(playerData.progressInterval);
-//                     playerData.progressInterval = null;
-
-//                     playerData.player.stop();
-//                     playerData.isPlaying = false;
-//                     playerData.playbackStartTime = null;
-//                     playerData.state.currentTime = 0;
-//                     playerData.playbackOffset = 0;
-
-//                     updateMusicInfo(playerData, "Paused");
-//                     document.getElementById(playerData.id === "deck-a" ? "playStopBtn" : "playStopBtnB").textContent = "Play";
-//                     renderWaveform(playerData);
-//                 }
-//             } catch (error) {
-//                 console.error(`[Interval - ${playerData.id}] Error updating progress:`, error);
-//             }
-//         }, 100);
-//     }
-// }
 
 function updateProgressBar(playerData, currentTime, duration) {
     const progressBarId = `${playerData.id}-progressBar`;
@@ -1860,6 +1703,11 @@ function renderMainPlaylist() {
 }
 
 function resetUI(playerData) {
+    // Stop spinning animation
+    const coverArtElement = document.getElementById(`${playerData.id}-coverArt`);
+    if (coverArtElement) {
+        coverArtElement.classList.remove('spinning');
+    }
     const progressBarId = `${playerData.id}-progressBar`;
     const currentTimeElementId = `${playerData.id}-currentTime`;
     const totalTimeElementId = `${playerData.id}-totalTime`;
@@ -2125,7 +1973,7 @@ function displayLibrarySongs(songs, container, fullLibrary) {
         item.dataset.gridfsId = song.gridfs_id;
         item.dataset.streamUrl = song.url || `/api/songs/stream/${song.gridfs_id}`;
         item.dataset.songName = song.name || 'Unknown Track';
-        item.dataset.artistName = song.artist || 'Unknown Artist';
+        // item.dataset.artistName = song.artist || 'Unknown Artist';
         item.dataset.cover = song.cover || 'https://via.placeholder.com/100';
         item.dataset.source = song.source || 'api';
 
@@ -2168,39 +2016,6 @@ function displayLibrarySongs(songs, container, fullLibrary) {
     document.dispatchEvent(new CustomEvent('libraryRendered'));
 }
 
-// ... (các hàm và logic khác trong guest.js) ...
-
-// GỠ BỎ HÀM initializeDragAndDrop khỏi guest.js
-// Vì logic thiết lập dropzone đã được xử lý trong dragdrop.js
-/*
-function initializeDragAndDrop() {
-    const deckAPlaylist = document.getElementById("deck-a-playlist-inner");
-    const deckBPlaylist = document.getElementById("deck-b-playlist-inner");
-
-    const setupDropZone = (element, deckId) => {
-        element.addEventListener("dragover", (event) => {
-            event.preventDefault();
-            element.classList.add("dragover");
-        });
-        element.addEventListener("dragleave", () => {
-            element.classList.remove("dragover");
-        });
-        element.addEventListener("drop", (event) => {
-             // ... (logic drop) ...
-        });
-    };
-
-    if (deckAPlaylist) setupDropZone(deckAPlaylist, 'A');
-    if (deckBPlaylist) setupDropZone(deckBPlaylist, 'B');
-}
-*/
-// Gỡ bỏ lời gọi initializeDragAndDrop trong DOMContentLoaded của guest.js
-// document.addEventListener('DOMContentLoaded', () => {
-//     // ...
-//     initializePlayers();
-//     // initializeDragAndDrop(); // <-- GỠ BỎ DÒNG NÀY
-//     loadMusicLibrary();
-// });
 
 function initializeDragAndDrop() {
     const deckAPlaylist = document.getElementById("deck-a-playlist-inner");
@@ -2377,5 +2192,244 @@ document.addEventListener('DOMContentLoaded', () => {
     initializePlayers();
     initializeDragAndDrop();
     loadMusicLibrary();
+
+    // TUTORIAL
+    const steps = [
+        { element: '.upload-controls', text: 'Ready to get started? Tap here to add your favorite tunes straight from your device!', position: 'above' },
+        { element: '#tab-browse-online', text: 'Dive into online tracks right here!' },
+        { element: ['#main-playlist-container', '.music-source-panel'], text: 'Drag songs into the playlist and build your vibe!' },
+        { element: ['#playStopBtn', '#playStopBtnB'], text: 'Play or pause your music here!', position: 'above' },
+        { element: ['.effect-carousel-container', '.main-content'], text: 'Feeling the groove? While your song’s spinning, give a Left Hand Thumb Up, then tilt it left or right to pick your perfect effect! 👍', image: '/static/index_picture/thumb.gif',  yPosition: '35%'  },
+        { element: '.main-content', text: 'Pinch Right Thumb & Index to fine-tune your effect! 👌', image: '/static/index_picture/pinch.gif',  yPosition: '40%' },
+        { element: '.main-content', text: 'Want to lock your vibe? Raise your Left Pinky to lock/unlock effects, or snap back to default by raising your Left Thumb high!', image: '/static/index_picture/lock effect.gif',  yPosition: '40%' },
+        { element: ['.crossfader-container', '.main-content'], text: 'Slide into smooth transitions—do a Peace Sign with your Left Hand to control the crossfader between decks. ✌️', image: '/static/index_picture/crossfader.gif',  yPosition: '40%' },
+        { element: '.under-waveform-left', text: 'Pick a virtual background or some interactive here to set the mood!' },
+        { element: '.header-center', text: 'Ready, set, record—mix in audio or video!' }
+    ];
+
+    let currentStep = 0;
+    let isSplashScreenActive = true;
+
+    const container = document.getElementById('tutorial-container');
+    const tooltip = document.getElementById('tutorial-tooltip');
+    const tutorialText = document.getElementById('tutorial-text');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const closeBtn = document.getElementById('close-btn');
+
+    const splashScreen = document.getElementById('splash-screen');
+    const startTutorialBtn = document.getElementById('start-tutorial-btn');
+
+    function updateClipPath(rect, padding = 10) {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        const top = Math.max(rect.top - padding, 0);
+        const left = Math.max(rect.left - padding, 0);
+        const bottom = Math.min(rect.bottom + padding, vh);
+        const right = Math.min(rect.right + padding, vw);
+
+        // vw, vh = viewport width/height
+        overlay.style.clipPath = `inset(${top}px ${vw - right}px ${vh - bottom}px ${left}px)`;
+
+    }
+
+    // const maskHole = document.getElementById('mask-hole');
+    const maskHole1 = document.getElementById('mask-hole-1');
+    const maskHole2 = document.getElementById('mask-hole-2');
+
+
+    function getCombinedRect(elements) {
+        let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
+
+    elements.forEach(el => {
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.left < left) left = rect.left;
+        if (rect.top < top) top = rect.top;
+        if (rect.right > right) right = rect.right;
+        if (rect.bottom > bottom) bottom = rect.bottom;
+    });
+
+    return { left, top, right, bottom, width: right - left, height: bottom - top };
+    }
+
+    function showStep(index) {
+        if (isSplashScreenActive) {
+            container.style.display = 'block';
+            splashScreen.style.display = 'flex';
+            tooltip.style.display = 'none';
+            return;
+        }
+
+        const step = steps[index];
+        const target = document.querySelector(step.element);
+
+        let elements = [];
+        if (Array.isArray(step.element)) {
+            elements = step.element.map(sel => document.querySelector(sel));
+        } else {
+            elements = [document.querySelector(step.element)];
+        }
+
+        if (elements.some(el => !el)) {
+            console.warn('One or more tutorial targets not found:', step.element);
+            return;
+        }
+
+        if (!target) return;
+
+        tutorialText.textContent = step.text;
+
+        container.style.display = 'block';
+
+        splashScreen.style.display = 'none';
+
+        // const rect = target.getBoundingClientRect();
+        const scrollTop = window.scrollY || window.pageYOffset;
+        const scrollLeft = window.scrollX || window.pageXOffset;
+
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const padding = 10;
+
+        // For first element
+        const rect1 = elements[0].getBoundingClientRect();
+        maskHole1.setAttribute('x', rect1.left + scrollLeft - padding);
+        maskHole1.setAttribute('y', rect1.top + scrollTop - padding);
+        maskHole1.setAttribute('width', rect1.width + padding * 2);
+        maskHole1.setAttribute('height', rect1.height + padding * 2);
+        maskHole1.removeAttribute('rx');
+        maskHole1.removeAttribute('ry');
+        maskHole1.style.display = 'block';
+
+        // For second element (if present)
+        if (elements[1]) {
+            const rect2 = elements[1].getBoundingClientRect();
+            maskHole2.setAttribute('x', rect2.left + scrollLeft - padding);
+            maskHole2.setAttribute('y', rect2.top + scrollTop - padding);
+            maskHole2.setAttribute('width', rect2.width + padding * 2);
+            maskHole2.setAttribute('height', rect2.height + padding * 2);
+            maskHole2.removeAttribute('rx');
+            maskHole2.removeAttribute('ry');
+            maskHole2.style.display = 'block';
+        } else {
+            maskHole2.style.display = 'none';
+        }
+
+         // For image positioning
+         const imageContainer = document.getElementById('tutorial-image-container');
+         const image = document.getElementById('tutorial-image');
+
+
+        if (step.image) {
+            image.src = step.image;  // Set the image source dynamically
+            imageContainer.style.display = 'flex';  // Show the image container
+
+            // Scale the image dynamically based on the viewport size
+            image.style.maxWidth = '50%'; // Limit width to 80% of the viewport
+            image.style.maxHeight = '50%'; // Limit height to 80% of the viewport
+
+            // Optionally apply zoom effect (scale the image)
+            image.style.transform = 'scale(1)'; // Adjust the scale value as needed
+
+            const yPosition = step.yPosition || '50%'; // Default to 50% if no yPosition is specified
+            image.style.position = 'absolute';
+            image.style.top = yPosition;
+
+        } else {
+            imageContainer.style.display = 'none';  // Hide the image container if no image
+        }
+        
+        // For tooltip positioning, you can combine bounding rects or base on first element:
+        const rect = getCombinedRect(elements);
+
+        // Make tooltip visible but hidden for measurement
+        tooltip.style.visibility = 'hidden';
+        tooltip.style.display = 'block';
+
+        const tooltipRect = tooltip.getBoundingClientRect();
+
+        tooltip.style.visibility = 'visible';
+
+        // Initialize top and left for tooltip
+        let top = 0;
+        let left = 0;
+        const margin = 10; // margin between tooltip and target
+
+        switch (step.position) {
+            case 'above':
+            top = rect.top + scrollTop - tooltipRect.height - margin;
+            left = rect.left + scrollLeft + rect.width / 2 - tooltipRect.width / 2;
+            break;
+
+            case 'below':
+            top = rect.bottom + scrollTop + margin;
+            left = rect.left + scrollLeft + rect.width / 2 - tooltipRect.width / 2;
+            break;
+
+            case 'left':
+            top = rect.top + scrollTop + rect.height / 2 - tooltipRect.height / 2;
+            left = rect.left + scrollLeft - tooltipRect.width - margin;
+            break;
+
+            case 'right':
+            top = rect.top + scrollTop + rect.height / 2 - tooltipRect.height / 2;
+            left = rect.right + scrollLeft + margin;
+            break;
+
+            default:
+            // fallback to below
+            top = rect.bottom + scrollTop + margin;
+            left = rect.left + scrollLeft + rect.width / 2 - tooltipRect.width / 2;
+        }
+
+        // Clamp tooltip inside viewport horizontally
+        if (left < 10) left = 10;
+        if (left + tooltipRect.width > vw - 10) left = vw - tooltipRect.width - 10;
+
+        // Clamp tooltip inside viewport vertically
+        if (top < 10) top = 10;
+        if (top + tooltipRect.height > vh - 10) top = vh - tooltipRect.height - 10;
+
+        tooltip.style.top = `${top}px`;
+        tooltip.style.left = `${left}px`;
+
+        prevBtn.disabled = index === 0;
+        nextBtn.textContent = index === steps.length - 1 ? 'Finish' : 'Next';
+
+        currentStep = index;
+    }
+
+  function closeTutorial() {
+    container.style.display = 'none';
+
+    splashScreen.style.display = 'none';
+        isSplashScreenActive = false;
+  }
+
+  prevBtn.addEventListener('click', () => {
+    if (currentStep > 0) showStep(currentStep - 1);
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentStep < steps.length - 1) showStep(currentStep + 1);
+    else closeTutorial();
+  });
+
+  closeBtn.addEventListener('click', closeTutorial);
+
+  startTutorialBtn.addEventListener('click', () => {
+    isSplashScreenActive = false;
+    showStep(0);
+});
+
+  // Optional: reposition tooltip and clip-path on window resize
+  window.addEventListener('resize', () => showStep(currentStep));
+
+  // Start tutorial immediately, or call this on some event to trigger:
+  showStep(0);
+    
    
 });
+
