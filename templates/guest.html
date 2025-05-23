@@ -67,10 +67,33 @@
             </div>
         </div>
         <div class="header-right">
-            <a href="#signup" class="nav-link">SIGNUP</a>
-            <a href="#login" class="nav-link">LOG IN</a>
+            <a href="#signup" class="nav-link signup-trigger">SIGNUP</a>
+            <a href="#login" class="nav-link login-trigger">LOG IN</a>
+            <span class="menu-toggle"><i class="fas fa-bars"></i></span>
         </div>
     </header>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-title">Menu</span>
+            <span class="close-sidebar"><i class="fas fa-times"></i></span>
+        </div>
+        <ul class="sidebar-menu">
+            <li  class="signup-trigger"><a href="#saved-sessions">Saved Sessions</a></li>
+            <li  class="signup-trigger"><a href="#music-library">Music Library</a></li>
+            <li  class="signup-trigger"><a href="#effects-library">Effects Library</a></li>
+            <li  class="signup-trigger"><a href="#visual-library">Visual Library</a></li>
+            <li  class="signup-trigger"><a href="#effects-library">Settings</a></li>
+        </ul>
+        <div class="sidebar-auth-buttons">
+            <a href="#signup" class="sidebar-auth-btn signup-trigger">Sign Up</a>
+            <a href="#login" class="sidebar-auth-btn login-trigger">Log In</a>
+        </div>
+    </div>
+
+    <!-- Overlay for closing sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- Popup for subscription tier -->
     <div id="subscriptionPopup" class="subscription-popup">
@@ -131,14 +154,49 @@
             </div>
              <button id="closePopupButton" class="close-btn">Close</button>
         </div>
-
-       
-    
     </div>
 
-    <!-- === MAIN CONTAINER === -->
+    <!-- Log in / Sign up -->
+    <div class="signup-panel">
+        <div class="panel-content">
+            <h2>Welcome to Me.J</h2>
+            <label>Email</label>
+            <input type="email" placeholder="Email" />
     
+            <label>Username</label>
+            <input type="text" placeholder="Username">
+    
+            <label>Password</label>
+            <input type="password" placeholder="Password">
+    
+            <button class="signuplogin-btn">Create account</button>
+            <div>Or</div>
+            <button class="google-btn"><span>Sign up with Google</span></button>
+            <p>Already have an account? <a href="#" class="login-trigger">Log in</a></p>
+            <button id="closeSignup" class="close-btn">Close</button>
+        </div>
+    </div>
+    
+    <div class="login-panel">
+        <div class="panel-content">
+            <h2>Log in to Me.J</h2>
+            <label>Email or Username</label>
+            <input type="text" placeholder="Email or Username">
 
+            <label>Password</label>
+            <input type="password" placeholder="Password">
+
+            <button class="signuplogin-btn">Log in</button>
+            <a href="#" class="forgot-password">Forgot password?</a>
+            <div>Or</div>
+            <button class="google-btn"><span>Log in with Google</span></button>
+            <p>No account? <a href="#" class="signup-trigger">Create one</a></p>
+            <button id="closeLogin" class="close-btn">Close</button>
+        </div>
+    </div>
+      
+
+    <!-- === MAIN CONTAINER === -->
     <div class="container">
 
         <!-- Waveform for Deck A - old-->
@@ -197,7 +255,7 @@
                             <img src="/static/index_picture/background visual/disable button 2.png" alt="Disable Visual" class="disable-image bg-image">
                         </div>
                         <div class="visual-option" data-visual="trail">
-                            <img src="/static/index_picture/background visual/glitch thumbnail.png" alt="Trail Visual" class="bg-image">
+                            <img src="/static/index_picture/interactive visual/trail thumbnail.png" alt="Trail Visual" class="bg-image">
                         </div>
                         <!-- Placeholder for future visuals -->
                         <div class="visual-option locked-option" data-visual="future1">
@@ -269,9 +327,9 @@
                         <!-- volume-control -->
                         <div class="volume-control">
                             <div class="slider-track">
-                                <input type="range" id="volumeSlider" min="0" max="100" value="50" orient="vertical">
+                                <input type="range" id="volumeSlider" min="0" max="100" value="100" orient="vertical">
                             </div>
-                            <p id="volumeStatus">50%</p>
+                            <p id="volumeStatus">100%</p>
 
                             <button id="playStopBtn">Play</button>
                         </div>
@@ -320,60 +378,15 @@
                                     <!-- Thư viện nhạc từ cloud sẽ load ở đây (như cũ) -->
                                 </div>
                             </div>
-                            <!-- Player preview (nếu có và muốn giữ lại ở đây) -->
-                            <!-- <div class="library-preview-player" id="library-preview-container"
-                                style="display: none; margin-top: 10px; padding: 8px; border: 1px solid #333; border-radius: 4px; background-color: #1e1e1e;">
-                                <p id="library-preview-info"
-                                    style="margin: 0 0 5px 0; font-size: 0.85em; color: #ddd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center;">
-                                    No track selected for preview
-                                </p>
-                                <audio id="library-preview-audio" controls style="width: 100%; height: 35px;"></audio>
-                            </div> -->
+
                         </div>
                     </div>
                 </div>
 
-
-                <!-- Controls Buttons & Effects A -->
-                <!-- <div class="controls" id="deck-a-controls">
-                                    <div id="deck-a-effectsPanel">
-                                        <div class="panel-header">Effects</div>
-                                        <div class="effect-row">
-                                            <span class="effect-name">Delay</span>
-                                            <span class="effect-value" id="delayStatus">0</span>
-                                        </div>
-                                        <div class="effect-row">
-                                            <span class="effect-name">Distort</span>
-                                            <span class="effect-value" id="distortionStatus">0</span>
-                                        </div>
-                                        <div class="effect-row">
-                                            <span class="effect-name">Pitch</span>
-                                            <span class="effect-value" id="pitchStatus">0</span>
-                                        </div>
-                                        <div class="effect-row">
-                                            <span class="effect-name">Reverb</span>
-                                            <span class="effect-value" id="reverbStatus">0</span>
-                                        </div>
-                                        <div class="effect-row">
-                                            <span class="effect-name">Speed</span>
-                                            <span class="effect-value" id="speedStatus">1.0x</span>
-                                        </div>
-                                        <div class="effect-row">
-                                            <span class="effect-name">Phaser</span>
-                                            <span class="effect-value" id="deck-a-phaserStatus">0</span>
-                                        </div>
-                                    </div>
-                                </div> -->
             </div>
 
             <!-- === COLUMN 2: WEBCAM & MAIN CONTROLS === -->
-            <!-- <div class="webcam-wrapper">
-                <div class="webcam-container">
-                    <video class="input_video" id="main-inputVideo" autoplay playsinline></video>
-                    <canvas class="output_canvas" id="main-outputCanvas" width="480" height="360"></canvas>
-                    <div id="gestureCue"></div>
-                </div>
-            </div> -->
+
 
             <!-- === COLUMN 3: DECK B CONTROLS === -->
             <div class="blank-container" id="deck-b-container">
@@ -382,9 +395,9 @@
                         <!-- volume control -->
                         <div class="volume-control-b">
                             <div class="slider-track">
-                                <input type="range" id="volumeSliderB" min="0" max="100" value="50" orient="vertical">
+                                <input type="range" id="volumeSliderB" min="0" max="100" value="100" orient="vertical">
                             </div>
-                            <p id="volumeStatusB">50%</p>
+                            <p id="volumeStatusB">100%</p>
 
                             <button id="playStopBtnB">Play</button>
                         </div>
@@ -413,14 +426,14 @@
                     <div class="playlist-header">Playlist</div>
                     <div class="playlist-decks-wrapper">
                         <div id="deck-a-playlist-column" class="playlist-column">
-                            <div class="column-header" style="background-color: #FF335F;">Deck A</div>
+                            <div class="column-header">Deck A</div>
                             <div class="playlist-items-inner" id="deck-a-playlist-inner">
                                 <!-- Playlist items for Deck A will be rendered here by JavaScript -->
                                 <p class="empty-playlist-text">Drag songs here</p>
                             </div>
                         </div>
                         <div id="deck-b-playlist-column" class="playlist-column">
-                            <div class="column-header" style="background-color: #3F5AD5;">Deck B</div>
+                            <div class="column-header" >Deck B</div>
                             <div class="playlist-items-inner" id="deck-b-playlist-inner">
                                 <!-- Playlist items for Deck B will be rendered here by JavaScript -->
                                 <p class="empty-playlist-text">Drag songs here</p>
@@ -430,6 +443,40 @@
                 </div>
             </div>
         </div>
+
+        <!-- TUTORIAL -->
+        <div id="tutorial-container" style="display:none;">
+            <div id="splash-screen">
+                <h1>Welcome to Me.J</h1>
+                <p>Please position yourself in frame, ensure good lighting conditions, and allow access to your webcam (or plug in a better cam if you’ve got one).
+                </p>
+                <button id="start-tutorial-btn">Start Tutorial</button>
+            </div>
+
+            <svg id="tutorial-mask" width="100%" height="100%" style="position:fixed; top:0; left:0; pointer-events:none; z-index:9999;">
+                <defs>
+                <mask id="mask">
+                    <rect width="100%" height="100%" fill="white"/>
+                    <rect id="mask-hole-1" x="0" y="0" width="0" height="0" fill="black" />
+                    <rect id="mask-hole-2" x="0" y="0" width="0" height="0" fill="black" />
+                </mask>
+                </defs>
+                <rect width="100%" height="100%" fill="rgba(0,0,0,0.8)" mask="url(#mask)"/>
+            </svg>
+
+             <!-- Image container for the tutorial images -->
+            <div id="tutorial-image-container" style="display:none; position:fixed; top:0; left:0; pointer-events:none; z-index:9998; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                <img id="tutorial-image" src="" alt="Tutorial Image" style="max-width: 80%; max-height: 80%;"/>
+            </div>
+
+            <div id="tutorial-tooltip">
+                <p id="tutorial-text"></p>
+                <button id="prev-btn">Previous</button>
+                <button id="next-btn">Next</button>
+                <button id="close-btn">Skip</button>
+            </div>
+        </div>
+
 
         <!-- === JAVASCRIPT LIBRARIES & YOUR SCRIPT === -->
         <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"
@@ -459,7 +506,9 @@
         <script src="../static/backend/panelManager.js"></script>
         <script src="../static/backend/visual-bg.js"></script>
         <script src="../static/backend/popup.js"></script>
+        <script src="../static/backend/login-signup.js"></script>
         <script src="../static/backend/visual-interactive.js"></script>
+        <script src="../static/backend/menu-sidebar.js"></script>
         <script>
             console.log("Guest HTML loaded, JS should initialize now.");
         </script>
