@@ -1,0 +1,1699 @@
+/* === Variables & Basic Styles === */
+:root {
+    --headerFont: "loos-wide", sans-serif;
+    --bodyFont: "loos-normal", sans-serif;
+
+    --red: #FF335F;
+    --blue: #3F5AD5;
+    --green: #E2F128;
+    --black: #000;
+    --logo-color: #FFFFFF;
+
+    --superbigFontSize: 4.2rem;
+    --bigFontSize: 2.5rem;
+    --mediumFontSize: 2rem;
+    --smallFontSize: 1rem;
+    --supersmallFontSize: 0.8rem;
+
+
+    --primary: #3F5AD5;    /* Blue (Deck B) */
+    --secondary: #FF335F; /* Pink (Deck A) */
+    --third: #E2F128;     /* Yellow (Accents, Effects, Borders) */
+    --heading: "loos-wide", sans-serif; /* Main Titles */
+    --body: "area-normal", sans-serif;
+    --orbitron: 'Orbitron', sans-serif; /* For digital displays like time, BPM */
+    --header-height: 30px;
+    --header-bg: #0D0A1A;
+    --center-bg: #3F5AD5;
+    --logo-color: #FFFFFF;
+    --tagline-color: #E2F128;
+    --icon-color: #FF335F;
+    --rec-dot-color: #FF335F;
+    --dark-bg: #05081a;
+    --deck-bg: rgba(10, 10, 20, 0.7);
+    --center-col-bg: rgba(10, 10, 20, 0.75);
+    --text-light: #dde;
+    --text-dark: #111;
+    --effect-item-bg: #333; /* Màu nền item effect */
+    --effect-item-border: #666; /* Màu viền item effect */
+    --effect-item-selected-bg: var(--secondary); /* Nền item effect khi chọn */
+    --effect-item-selected-border: var(--primary); /* Viền item effect khi chọn */
+    --effect-item-selected-color: #000; /* Màu chữ item effect khi chọn */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--bodyFont);
+}
+
+html {
+    height: 100vh;
+    overflow: hidden;
+    font-weight: 600;
+    background-color: var(--dark-bg); /* Dark background for the whole page */
+}
+
+body {
+    padding: 0;
+    font-family: var(--body);
+    font-weight: 200;
+    height: 100vh;
+    background-color: var(--dark-bg);
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    color: var(--text-light);
+}
+
+/* === Header (Keep as is) === */
+.app-header {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, #0B072D, #101010);;
+    height: var(--header-height);
+    padding: 0 25px;
+    color: var(--logo-color);
+    flex-shrink: 0;
+    z-index: 100; /* Header always on top */
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(63, 90, 213, 0.5); /* Subtle separator */
+}
+
+.header-left { display: flex; align-items: center; gap: 10px; font-size: 0.5rem;}
+.logo { font-family: var(--headerFont); font-size: 20px; font-weight: 900; color: var(--logo-color); letter-spacing: -1px;   text-decoration: none;}
+.tagline { font-size: var(--smallFontSize); color: var(--tagline-color); }
+
+.header-center {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    height: 30px; /* Slightly lower dip */
+    display: flex;
+    align-items: flex-start;
+    z-index: 1;
+    overflow: visible; /* Allow shadow */
+}
+
+.center-bg {
+    background: linear-gradient(to bottom, #40349C, #161236);
+    height: 30px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 35px; /* Increased gap */
+    padding: 0 45px; /* Increased padding */
+    border-bottom-left-radius: 50px; /* Smoother curve */
+    border-bottom-right-radius: 50px;
+}
+
+
+.header-right { display: flex; align-items: center; gap: 25px; }
+.nav-link { color: var(--tagline-color); text-decoration: none; font-size: var(--smallFontSize); text-transform: uppercase; transition: color 0.2s ease, opacity 0.2s ease; }
+.nav-link:hover { color: #ffffff; opacity: 0.9; }
+/* Add Hamburger menu icon style if needed */
+.header-right .menu-icon { /* Assuming you add an element with this class */
+    color: var(--tagline-color);
+    font-size: 20px;
+    cursor: pointer;
+}
+.header-right .menu-icon:hover { color: #fff; }
+
+
+.icon { display: flex; align-items: center; color: var(--icon-color); font-size: 16px; font-weight: 600; gap: 6px; cursor: pointer; transition: color 0.2s ease, transform 0.2s ease; }
+.icon:hover { color: #ffffff; transform: scale(1.1); }
+.rec-icon i { font-size: 10px; color: var(--rec-dot-color); animation: pulse-rec 2s infinite; }
+.eq-icon i { font-size: 18px; }
+.camera-icon i { font-size: 18px; }
+
+@keyframes pulse-rec {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+
+
+/* === Waveform Display (Keep as is from previous version) === */
+.container {
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+#deck-a-waveform-container, #deck-b-waveform-container {
+    z-index: 999;
+    position: relative;
+    width: 100%;
+    height: 40px; /* Keep height from previous code */
+    background-color: #131313; /* Black background for waveforms */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 0;
+    padding: 10px 20px; 
+    flex-shrink: 0;
+    border: none; /* Remove previous border */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); /* Inner shadow for depth */
+}
+/* 
+#waveform {
+    background: linear-gradient(to bottom,  #FF335F, #000000);
+    width: 100%; 
+    height: 35px;
+    padding-left: 20px;
+    padding-right: 20px;
+} 
+
+#waveform-b {
+    background: linear-gradient(to bottom,#3F5AD5, #000000);
+    width: 100%;
+    height: 35px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+#waveform:empty::before { content: ""; 
+    background: linear-gradient(to bottom, #FF335F, #000000);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+#waveform-b:empty::before {
+    content: "";
+    background: linear-gradient(to bottom,#3F5AD5, #000000);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+} */
+
+#waveform, #waveform-b {
+    width: 100%;
+    height: 28px;
+}
+
+.under-waveform{
+    background-color: #000000; /* Black background */
+    width: 100%; /* Full width */
+    height: 90px; /* Ensure enough height */
+    display: flex; /* Sử dụng flexbox để căn giữa */
+    justify-content: space-between; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    gap: 15px;
+    padding: 0 15px ;
+    z-index: 10; /* Đảm bảo nằm trên webcam */
+    font-size: var(--supersmallFontSize);
+}
+
+
+/* BG VISUAL */
+.under-waveform-left, .under-waveform-right{
+    flex: 1;
+    display: flex;
+    width: 100%;
+    height: 60%;
+}
+
+.crossfader-container {
+    flex: 0 0 30%;
+
+    display: flex;
+    flex-direction: column; /* Sắp xếp input và span theo cột */
+    align-items: center; /* Căn giữa theo chiều ngang */
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    margin-top: 10px; /* Khoảng cách với element trên */
+    max-width: 100%; /* Đảm bảo không tràn container */
+    /* width: 30%;  */
+}
+
+.crossfader-container input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%; /* Chiếm toàn bộ width của container */
+    height: 10px;
+    background: linear-gradient(to right, var(--secondary), var(--primary)); /* Gradient 3 màu */
+    outline: none;
+    transition: background 0.2s;
+}
+
+.crossfader-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 20px;
+    background: var(--green);
+    cursor: pointer;
+    border-radius: 10%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    transition: box-shadow 0.2s ease;
+}
+ .crossfader-container input[type="range"]::-webkit-slider-thumb:hover {
+     box-shadow: 0 1px 5px rgba(0,0,0,0.6);
+ }
+
+.crossfader-container input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid #333;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    transition: box-shadow 0.2s ease;
+}
+ .crossfader-container input[type="range"]::-moz-range-thumb:hover {
+    box-shadow: 0 1px 5px rgba(0,0,0,0.6);
+}
+
+.crossfader-container span {
+    margin-top: 8px; /* Khoảng cách với thanh trượt */
+    color: var(--text-light);
+    font-size: var(--supersmallFontSize);
+    font-family: var(--bodyFont); /* Font digital */
+}
+
+/* BG button */
+.background-selector {
+    /* position: absolute;
+    top: 10px;
+    left: 10px; */
+    /* z-index: 10; */
+}
+
+/* Under waveform buttons Styling */
+.background-selector button, .visual-selector button , .visualizer-mode, .live-mode, .gesture-customization {
+    /* font-size: var(--supersmallFontSize); */
+    font-family: var(--bodyFont);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: black; /* Default background */
+    border: solid 1px var(--green);
+    border-radius: 0;
+    color: var(--green); /* Ensure text is visible */
+    padding: 10px 20px; /* Add padding for better appearance */
+    position: relative; /* For layering */
+}
+
+.visualizer-mode {
+    background-color: var(--green);
+    color: black;
+    font-weight: 600;
+    cursor:default;
+}
+
+.background-selector, .visual-selector {
+    height: 100%;
+    width: 100%;
+}
+
+.background-selector button , .visual-selector button {
+    background-size: cover; /* Ensure the background image covers the button */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Prevent tiling */
+}
+
+.background-selector button::before , .visual-selector button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3); /* Semi-transparent overlay to ensure text readability */
+    z-index: 1; /* Below the text */
+}
+
+.background-selector button span , .visual-selector button span {
+    position: relative; /* Ensure text is above the overlay */
+    z-index: 2; /* Above the overlay */
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.8); /* Add shadow for better contrast */
+}
+
+.background-selector button:hover , .visual-selector button:hover ,  .live-mode:hover , .gesture-customization:hover {
+    background-color: rgb(61, 61, 61); /* Hover effect */
+
+}
+
+
+.background-dropdown , .visual-dropdown {
+
+    position: absolute;
+    background-color: #191919;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0; 
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.background-dropdown.show , .visual-dropdown.show {
+    max-height: 400px;
+    padding: 10px 0;
+}
+
+.background-option , .visual-option {
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.bg-image {
+    width: 100%;
+    height: 30px;
+    object-fit: cover;
+    border: 1px solid #5c5c5c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.background-option:hover .bg-image , .visual-option:hover .bg-image {
+    border-color: var(--green);
+}
+
+.selected .bg-image {
+    border-color: var(--green);
+}
+
+.visual-option.active .bg-image {
+    border-color: var(--green);
+}
+
+/* Locked option styling */
+.locked-option {
+    position: relative;
+    overflow: hidden;
+}
+
+.locked-option .bg-image {
+    opacity: 0.5;
+}
+
+.locked-option::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    background-image: url('/static//index_picture/lock.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+}
+
+.locked-option:hover::after {
+    content: 'Upgrade for more!';
+    width: 100%;
+    height: 100%;
+    color: var(--green);
+    font-size: 12px;
+    font-family: var(--bodyFont);
+    text-align: center;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    background-image: none;
+}
+
+/* MAIN CONTENT */
+.main-content {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    overflow: hidden;
+    overflow-y: auto;
+    gap: 15px;
+
+
+}
+
+/* Webcam Wrapper as Full Background */
+.webcam-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    flex: 1 1 auto;
+    z-index: 1; /* Behind the decks and middle column */
+    overflow: hidden;
+    background-color: #000; /* Fallback background */
+    /* Contains both video/canvas AND the middle column controls */
+}
+
+/* Video/Canvas Container within Wrapper */
+.webcam-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Base layer within wrapper */
+    overflow: hidden;
+}
+
+#main-inputVideo {
+    transform: scaleX(-1);
+    visibility: hidden; 
+    position: absolute;
+}
+
+#main-outputCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1; 
+}
+
+/* Gesture Cue - Keep styling, ensure it's above canvas */
+#gestureCue {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90px; height: 90px;
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    z-index: 5; /* Above canvas */
+    display: none; opacity: 0;
+    transition: opacity 0.5s ease-out;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+/* === Columns / Decks (Overlaying the Background) === */
+
+/* Deck A & Deck B Styling */
+.controls-container, /* Deck A */
+.blank-container { /* Deck B */
+    /* flex: 0 0 33%; */
+    flex: 0 0 25%; /* Fixed width of 250px, no growing */
+    height: 100%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    /* align-content: space-between; */
+    justify-content: space-between;
+    box-sizing: border-box;
+    overflow-y: hidden; 
+    overflow-x: hidden;
+    position: relative;
+    z-index: 2;
+    gap: 15px;
+    /* scrollbar-width: auto;
+    scrollbar-color: #888 #000000; */
+    /* <<< THÊM DÒNG NÀY: */
+    min-height: 0; /* Cho phép flex item co nhỏ hơn chiều cao nội dung, kích hoạt overflow */
+}
+
+
+
+/* Style for drag/drop highlight (keep) */
+.controls-container.droppable,
+.blank-container.droppable {
+    border: 3px dashed var(--primary);
+    background-color: rgba(63, 90, 213, 0.2);
+}
+
+/* === Center Column (Library, Search, Preview) Styling === */
+.webcam-wrapper > #main-controls-container {
+    display: flex !important;
+    flex-direction: column;
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30%;
+    height: calc((100% - 50px) * (2 / 5));
+    padding: 15px;
+    background-color: var(--center-col-bg);
+    border: 1px solid var(--third);
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    z-index: 3;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #555 rgba(0, 0, 0, 0.1);
+}
+
+#main-controls-container h3 {
+    color: var(--third);
+    font-family: var(--bodyFont);
+    font-size: var(--smallFontSize);
+    margin-bottom: 15px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.search-container {
+    width: 100%;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+
+    /* flex-shrink: 0; */
+}
+#library-searchInput {
+    /* flex-grow: 1; */
+    /* padding: 8px 12px; */
+    width: 100%;
+    font-size: var(--smallFontSize);
+    font-family: var(--bodyFont);
+    padding-left: 5px;
+    border: 1px solid var(--green);
+    outline: none;
+    background-color: rgba(28, 37, 38, 0.7);
+    color: #fff;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.4);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+#library-searchInput:focus {
+    border-color: var(--third);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.4), 0 0 5px var(--third);
+}
+#library-searchBtn {
+    padding: 8px 14px;
+    background-color: var(--third);
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+
+    /* flex-shrink: 0; */
+}
+
+#library-searchBtn:hover {
+    background-color: #BFBC00;
+}
+
+#main-controls-container #music-library-carousel {
+    width: 100%;
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    border: 1px solid rgba(226, 241, 40, 0.5);
+    scrollbar-width: thin;
+    scrollbar-color: #555 rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+
+#main-controls-container #music-library-carousel-inner {
+    display: block; height: auto;
+}
+
+
+
+#main-controls-container .carousel-item {
+    display: flex; align-items: center; width: 100%;
+    height: auto; margin: 0 0 5px 0; cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 3px; overflow: hidden; text-align: left;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    user-select: none; position: relative;
+    border: 1px solid transparent; padding: 6px 8px;
+}
+#main-controls-container .carousel-item:last-child { margin-bottom: 0; }
+#main-controls-container .carousel-item:hover { background-color: rgba(226, 241, 40, 0.1); }
+#main-controls-container .carousel-item.active { border-color: var(--third); background-color: rgba(226, 241, 40, 0.2); box-shadow: 0 0 5px var(--third); }
+#main-controls-container .carousel-item .name-wrapper {
+    flex-grow: 1; font-size: 12px; color: #eee; padding: 0 8px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-family: Arial, sans-serif; line-height: 1.3; min-height: auto;
+}
+#music-library-carousel-inner .carousel-item button {
+    margin: 0 2px;
+    padding: 3px 6px;
+    font-size: 8px;
+    width: auto; height: auto;
+    border: none;
+    color: white;
+    flex-shrink: 0;
+}
+#music-library-carousel-inner .carousel-item button:nth-of-type(1) { background-color: #4CAF50; }
+#music-library-carousel-inner .carousel-item button:nth-of-type(1):hover { background-color: #45a049;}
+#music-library-carousel-inner .carousel-item button:nth-of-type(2) { background-color: #2196F3; }
+#music-library-carousel-inner .carousel-item button:nth-of-type(2):hover { background-color: #1976D2; }
+#music-library-carousel-inner .carousel-item button:nth-of-type(3) { background-color: #f44336; }
+#music-library-carousel-inner .carousel-item button:nth-of-type(3):hover { background-color: #d32f2f;}
+
+
+
+#library-preview-container {
+     margin-top: auto;
+     padding: 10px;
+     border: 1px solid rgba(226, 241, 40, 0.5);
+     background-color: rgba(0, 0, 0, 0.3);
+     flex-shrink: 0;
+}
+#library-preview-info {
+    margin: 0 0 8px 0; font-size: 0.9em; color: #ddd;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    text-align: center;
+}
+#library-preview-audio {
+    width: 100%; height: 35px;
+}
+#library-preview-audio::-webkit-media-controls-panel {
+    background-color: rgba(40, 40, 40, 0.8);
+}
+#library-preview-audio::-webkit-media-controls-play-button,
+#library-preview-audio::-webkit-media-controls-timeline,
+#library-preview-audio::-webkit-media-controls-current-time-display,
+#library-preview-audio::-webkit-media-controls-time-remaining-display,
+#library-preview-audio::-webkit-media-controls-mute-button,
+#library-preview-audio::-webkit-media-controls-volume-slider {
+    color: var(--third);
+}
+
+
+/* === Deck A & B Internal Structure (Keep previous styles, ensure they fit in 33% width) === */
+
+/* Song Container Area (Top part of Deck) */
+#deck-a-song-container, #deck-b-song-container {
+    /* display: flex;  */
+    align-items: center; 
+    gap: 15px; 
+    background: none;
+    border: none; padding: 0; margin-bottom: 10px; flex-shrink: 0;
+    display: flex; 
+    flex-direction: column;
+    flex: 2;
+}
+
+
+
+.song-container-top {
+    display: flex;
+}
+
+
+
+/* Vinyl Disc / Cover Art */
+#deck-a-coverArt {
+    border-radius: 50%;
+    width: 180px;
+    height: 180px;
+    background-color: #111;
+    background-image: url('/static/index_picture/vinyl disk.png');
+    background-size: cover;
+    background-position: center;
+    border: none;
+    box-shadow: 0 0 0px 8px var(--secondary), inset 0 0 8px rgba(0,0,0,0.5);
+    transition: box-shadow 0.5s ease; /* Ã¢Å“â€¦ bÃ¡Â»Â transition transform */
+    flex-shrink: 0;
+    cursor: grab;
+    will-change: transform; /* Ã¢Å“â€¦ tÃ¡Â»â€˜i Ã†Â°u cho animation */
+    margin: 20px;
+    grid-column: 1 / span 2;
+    grid-row: 1;
+}
+
+#deck-b-coverArt {
+    border-radius: 50%;
+    width: 180px;
+    height: 180px;
+    background-color: #111;
+    background-image: url('/static/index_picture/vinyl disk.png');
+    background-size: cover;
+    background-position: center;
+    border: none;
+    box-shadow: 0 0 0px 8px #3F5AD5, inset 0 0 8px rgba(0,0,0,0.5);
+    transition: box-shadow 0.5s ease; /* Ã¢Å“â€¦ bÃ¡Â»Â transition transform */
+    flex-shrink: 0;
+    cursor: grab;
+    will-change: transform; /* Ã¢Å“â€¦ tÃ¡Â»â€˜i Ã†Â°u cho animation */
+    margin: 20px;
+    grid-column: 2 / span 3;
+    grid-row: 1;
+}
+
+#deck-a-coverArt[data-song-cover=""],
+#deck-b-coverArt[data-song-cover=""] {
+    background-image: url('/static/index_picture/vinyl disk.png') !important;
+}
+
+/* #deck-a-coverArt:not([data-song-cover]),
+#deck-b-coverArt:not([data-song-cover]) {
+    background-image: url('/static/index_picture/vinyl disk.png') !important;
+} */
+
+#deck-a-coverArt.spinning, #deck-b-coverArt.spinning {
+    animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Volume Control */
+#deck-a-song-container .volume-control, #deck-b-song-container .volume-control-b {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 6px;
+    height: 100%;  
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+#deck-a-song-container .slider-track, #deck-b-song-container .slider-track {
+    position: relative; width: 18px; height: 100%;
+    background: none; display: flex; justify-content: center; align-items: center;
+}
+#deck-a-song-container .slider-track::before, #deck-a-song-container .slider-track::after,
+#deck-b-song-container .slider-track::before, #deck-b-song-container .slider-track::after {
+    content: ""; position: absolute; width: 3px; height: 100%; background-color: #555; border-radius: 2px;
+}
+#deck-a-song-container .slider-track::before, #deck-b-song-container .slider-track::before { left: 0; }
+#deck-a-song-container .slider-track::after, #deck-b-song-container .slider-track::after { right: 0; }
+#volumeSlider, #volumeSliderB {
+    -webkit-appearance: slider-vertical; appearance: slider-vertical; writing-mode: bt-lr;
+    width: 100%; height: 100%; background: transparent; cursor: pointer; position: relative; z-index: 1; outline: none; margin: 0;
+}
+#volumeSlider::-webkit-slider-thumb, #volumeSliderB::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 22px; height: 10px; background: var(--secondary); cursor: pointer; border: 1px solid #000;
+}
+#volumeSliderB::-webkit-slider-thumb { background: var(--primary); }
+#volumeSlider::-moz-range-thumb, #volumeSliderB::-moz-range-thumb {
+     width: 22px; height: 10px; background: var(--secondary); cursor: pointer; border: 1px solid #000;
+}
+#volumeSliderB::-moz-range-thumb { background: var(--primary); }
+
+#volumeStatus,
+#volumeStatusB {
+    margin-top: 5px;
+    font-size: 10px;
+    font-family: var(--bodyFont);
+}
+
+#volumeStatus {
+    color: var(--red);
+}
+
+#volumeStatusB {
+    color: var(--blue);
+}
+
+/* Song Info Area (Progress, Time, Play) */
+#deck-a-song-info {
+    /* display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto; */
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    /* padding: 5px 0; */
+    /* margin-top: 5px; */
+  }
+  
+#deck-b-song-info {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.duration-bar{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 90%;
+  max-width: 400px;
+  grid-column: 1 / span 2;  /* Cột 1 */
+  grid-row: 2;      /* Dòng 2 */
+}
+.duration-bar-b {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 90%;
+    max-width: 400px;
+    grid-column: 2 / span 3;  /* Cột 1 */
+    grid-row: 2;      /* Dòng 2 */
+  }
+.current-time, .total-time, .current-time-b, .total-time-b { font-size: 11px; color: #ffffff; flex-shrink: 0; font-family: var(--bodyFont); }
+.progress-container { flex-grow: 1; height: 6px; background-color: #444; position: relative; cursor: pointer; overflow: hidden; }
+.progress-container-b { flex-grow: 1; height: 6px; background-color: #444; position: relative; cursor: pointer; overflow: hidden; }
+.progress-bar { width: 0%; height: 100%; background: var(--secondary); transition: width 0.1s linear;}
+.progress-bar-b { width: 0%; height: 100%; background: var(--primary); transition: width 0.1s linear;}
+#playStopBtn {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: var(--secondary);
+    padding: 0;
+    width: 40px;
+    height: 28px;
+    border: 1px solid var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-top: 5px;
+    grid-column: 3;
+    grid-row: 2;
+  }
+  #playStopBtnB {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: var(--primary);
+    padding: 0;
+    width: 40px;
+    height: 28px;
+    border: 1px solid var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-top: 5px;
+    grid-column: 1;
+    grid-row: 2;
+    border-color: var(--primary); 
+  }
+#playStopBtn:hover, #playStopBtnB:hover { background-color: rgba(255, 255, 255, 0.1); border-color: #fff; color: #fff;content: '▐▐' }
+#playStopBtn::before, #playStopBtnB::before { content: '▷'; font-size: 14px; line-height: 1; display: inline-block; }
+#playStopBtn.playing::before, #playStopBtnB.playing::before { content: '▷'; }
+#playStopBtn:disabled, #playStopBtnB:disabled { background-color: #ffffff !important; cursor: not-allowed; opacity: 0.6; border-color: #777; color: #999;content: '▐▐' }
+#playStopBtn:disabled:hover, #playStopBtnB:disabled:hover { filter: none; background-color: #555 !important;content: '▐▐';  }
+
+/* Track Title Display */
+#musicInfo {
+  font-family: var(--heading);
+  font-size: var(--smallFontSize);
+  font-weight: 600;
+  color: var(--secondary);
+  white-space: normal;
+  text-align: center;
+  width: 100%;
+  padding: 5px;
+  margin: 8px 0;
+  line-height: 1.3;
+  background: none;
+  border: none;
+  box-shadow: none;
+  min-height: auto;
+  grid-column: 1 / 3; /* từ cột 1 đến cột 3, tức là chiếm cả 2 cột */
+  grid-row: 3;        /* nằm ở dòng 3 */
+}
+#musicInfoB {
+    font-family: var(--heading);
+    font-size: var(--smallFontSize);
+    font-weight: 600;
+    color: var(--primary);
+    white-space: normal;
+    text-align: center;
+    width: 100%;
+    padding: 5px;
+    margin: 8px 0;
+    line-height: 1.3;
+    background: none;
+    border: none;
+    box-shadow: none;
+    min-height: auto;
+    grid-column: 2 / 4; /* từ cột 1 đến cột 3, tức là chiếm cả 2 cột */
+    grid-row: 3;        /* nằm ở dòng 3 */
+  }
+
+/* Mid-Section: Controls Buttons & Carousel/Playlist */
+/* === MODIFICATION START === */
+#deck-a-controls, #deck-b-controls {
+    display: flex;
+    /* flex-direction: row; -- No longer needed, flex-wrap handles direction */
+    flex-wrap: wrap;       /* <<< ALLOWS ITEMS TO WRAP TO THE NEXT LINE */
+    justify-content: center; /* Center the buttons on their line */
+    align-items: flex-start; /* Align items (button row and panel row) to the top */
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding: 5px 0;
+    margin-top: 0;
+    order: 1; /* This determines the order of #deck-a-controls relative to siblings */
+}
+
+#deck-a-controls button, #deck-b-controls button {
+    /* Keep existing button appearance */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    row-gap: 15px; /* khoÃ¡ÂºÂ£ng cÃƒÂ¡ch giÃ¡Â»Â¯a cÃƒÂ¡c hÃƒ ng */
+    column-gap: 10px; /* khoÃ¡ÂºÂ£ng cÃƒÂ¡ch giÃ¡Â»Â¯a cÃƒÂ¡c nÃƒÂºt ngang */
+    margin-bottom: 15px;
+    margin-block-start: 15px;
+    outline: 3px solid #E2F128;
+    outline-offset: 0px; /* Cho viÃ¡Â»Ân nÃ¡ÂºÂ±m sÃƒÂ¡t nÃƒÂºt */
+    padding: 4px 15px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text-dark);
+    background-color: var(--third);
+    border: none;
+    transition: background-color 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    /* Flex item control */
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+/* Khi hover trÃ¡Â»Â±c tiÃ¡ÂºÂ¿p vÃƒ o nÃƒÂºt Upload -> ChuyÃ¡Â»Æ’n thÃƒ nh Active */
+#deck-a-controls button[onclick*="uploadMusic"]:hover,
+#deck-b-controls button[onclick*="uploadMusicB"]:hover {
+    background-color: #000000; /* NÃ¡Â»Ân xÃƒÂ¡m Ã„â€˜Ã¡ÂºÂ­m */
+    color: var(--button-active-text);       /* ChÃ¡Â»Â¯ vÃƒ ng */
+    border-color: var(--button-active-text); /* ViÃ¡Â»Ân vÃƒ ng (nÃ¡Â»â€¢i) */
+}
+/* === MODIFICATION END === */
+
+/* #deck-a-controls button:hover, #deck-b-controls button:hover { filter: brightness(1.1); box-shadow: 0 4px 8px rgba(0,0,0,0.3); } */
+#deleteSongBtn, #deleteSongBtnB { display: inline-block; background-color: #1E1E1E; color: white; }
+#deleteSongBtn:hover, #deleteSongBtnB:hover { background-color: #1E1E1E; color: white; }
+#recordBtn, #recordBtnB { display: none; }
+#recordBtn.recording, #recordBtnB.recording { background-color: #e91e63; color: white; animation: pulse-recording 1.5s infinite ease-in-out; }
+#recordBtn.recording:hover, #recordBtnB.recording:hover { background-color: #c2185b; }
+/* @keyframes pulse-recording... (keep if needed) */
+
+/* Carousel Wrapper / Playlist Area */
+.carousel-wrapper {
+    display: flex; justify-content: center; width: 100%; margin: 0;
+    flex-grow: 1; flex-shrink: 1; overflow: hidden; order: 2; min-height: 80px;
+}
+#deck-a-carousel, #deck-b-carousel {
+    width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.2); padding: 8px; border: 1px solid rgba(226, 241, 40, 0.5);
+    white-space: normal; position: relative; scrollbar-width: thin; scrollbar-color: #555 rgba(0, 0, 0, 0.1);
+}
+#deck-a-carousel-inner, #deck-b-carousel-inner { display: block; white-space: normal; height: auto; }
+#deck-a-carousel .carousel-item, #deck-b-carousel .carousel-item {
+    display: flex; align-items: center; width: 100%; height: auto; margin: 0 0 5px 0; cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.05); overflow: hidden; text-align: left;
+    transition: background-color 0.2s ease, border-color 0.2s ease; user-select: none; position: relative;
+    border: 1px solid transparent; padding: 6px 8px;
+}
+#deck-a-carousel .carousel-item:last-child, #deck-b-carousel .carousel-item:last-child { margin-bottom: 0; }
+#deck-a-carousel .carousel-item:hover, #deck-b-carousel .carousel-item:hover { background-color: rgba(226, 241, 40, 0.1); }
+#deck-a-carousel .carousel-item.dragging, #deck-b-carousel .carousel-item.dragging { opacity: 0.7; transform: scale(1.02); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); z-index: 10; }
+#deck-a-carousel .carousel-item.active, #deck-b-carousel .carousel-item.active { border-color: var(--third); background-color: rgba(226, 241, 40, 0.2); box-shadow: 0 0 5px var(--third); }
+#deck-a-carousel .carousel-item img, #deck-b-carousel .carousel-item img { display: none; }
+#deck-a-carousel .carousel-item .name-wrapper, #deck-b-carousel .carousel-item .name-wrapper {
+    flex-grow: 1; font-size: 12px; color: #eee; padding: 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-family: var(--bodyFont); line-height: 1.3; min-height: auto;
+}
+#deck-a-carousel .carousel-item button, #deck-b-carousel .carousel-item button {
+    font-size: 12px; padding: 3px 6px; margin-left: 5px; background-color: transparent;
+    border: 1px solid var(--third); color: var(--third); cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease; width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+#deck-a-carousel .carousel-item button:hover, #deck-b-carousel .carousel-item button:hover { background-color: var(--third); color: var(--text-dark); }
+
+
+/* Bottom Section: Effects Panel */
+/* === MODIFICATION START === */
+#deck-a-effectsPanel, #deck-b-effectsPanel {
+    display: block;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--third);
+    color: var(--third);
+    font-family: 'Arial', sans-serif;
+    /* max-width: 100%; -- width:100% below will handle this */
+    overflow: hidden;
+    /* margin-top: 10px; -- Replaced by gap in parent */
+    flex-shrink: 0;
+    /* order: 3; -- No longer needed as flex-wrap handles positioning */
+    width: 100%; /* <<< ENSURES PANEL TAKES FULL WIDTH ON ITS NEW LINE */
+}
+/* === MODIFICATION END === */
+/* 
+#deck-a-effectsPanel .panel-header, #deck-b-effectsPanel .panel-header {
+    background: none; color: var(--third); font-weight: bold; padding: 6px 12px; position: relative;
+    font-size: 13px; text-align: center; border-bottom: 1px solid rgba(226, 241, 40, 0.5); text-transform: uppercase;
+}
+#deck-a-effectsPanel .effect-row, #deck-b-effectsPanel .effect-row {
+    display: flex; justify-content: space-between; align-items: center; padding: 6px 12px;
+    border-top: 1px solid rgba(226, 241, 40, 0.2); font-size: 12px;
+}
+#deck-a-effectsPanel .effect-row:first-of-type, #deck-b-effectsPanel .effect-row:first-of-type { border-top: none; }
+#deck-a-effectsPanel .effect-name, #deck-a-effectsPanel .effect-value,
+#deck-b-effectsPanel .effect-name, #deck-b-effectsPanel .effect-value { color: var(--third); font-family: var(--orbitron); }
+#deck-a-effectsPanel .effect-name, #deck-b-effectsPanel .effect-name { font-family: Arial, sans-serif; font-weight: normal; color: #ccc; } */
+
+
+/* === Scrollbar Styling (Keep as is) === */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2) }
+::-webkit-scrollbar-thumb { background: #555; border: 1px solid #333; }
+::-webkit-scrollbar-thumb:hover { background: #777; }
+.controls-container, .blank-container,
+#main-controls-container,
+#deck-a-carousel, #deck-b-carousel, #music-library-carousel {
+    scrollbar-width: thin;
+    scrollbar-color: #555 rgba(0, 0, 0, 0.2);
+}
+
+
+/* === Drag & Drop Styles (Keep/Refine) === */
+.carousel.drag-over-active { border: 2px dashed var(--third); background-color: rgba(226, 241, 40, 0.1); }
+.dragging { opacity: 0.6; background: #555; }
+
+/* EFFECT CAROUSEL STYLES */
+.effect-carousel-container {
+    position: absolute; /* Keep absolute positioning for placement within webcam-wrapper */
+    top: 20px; /* Distance from bottom, adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%; /* Use most of the available width, adjustable */
+    font-family: var(--bodyFont);
+
+    display: flex;
+    justify-content: center; /* Center the carousel within the container */
+    z-index: 5; /* Ensure it appears above other elements */
+    pointer-events: auto; /* Allow interaction with items */
+}
+
+.effect-carousel {
+    display: flex;
+    flex-direction: row; /* Explicitly set to row for clarity */
+    justify-content: center; /* Center items if they don't fill the container */
+    align-items: center; /* Vertically center items */
+    width: 100%; /* Take full width of the container */
+    transition: transform 0.3s ease-in-out; /* Keep smooth transition for carousel sliding */
+    gap: 10px; /* Add spacing between items */
+}
+
+.effect-item {
+    flex: 1 1 0; /* Equal width for all items, allows growing/shrinking equally */
+    min-width: 0; /* Prevent overflow issues */
+    border-radius: 0px;
+    color: black;
+    white-space: nowrap;
+    background-color: rgb(226, 241, 40, 0.3);
+    user-select: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    text-align: center; /* Center text within each item */
+    padding: 8px; /* Add padding for better appearance */
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+/* .effect-item {
+    padding: 8px 16px;
+    margin: 0 5px;
+    border: 1px solid var(--effect-item-border);
+    border-radius: 0px;
+    color: var(--text-light);
+    cursor: pointer;
+    white-space: nowrap;
+    background-color: var(--effect-item-bg);
+    user-select: none;
+    width: 15%; 
+    height: auto;
+    flex-shrink: 0;
+    text-align: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    font-weight: normal; 
+} */
+
+/* .effect-item:hover {
+    background-color: #444;
+    border-color: #888;
+} */
+
+.effect-item.selected {
+    background-color:var(--green);
+    border-color: var(--effect-item-selected-border);
+    color: var(--effect-item-selected-color);
+    font-weight: bold; /* Item được chọn sẽ in đậm */
+    /* box-shadow: 0 0 8px rgba(226, 241, 40, 0.6); */ /* Có thể thêm shadow nổi bật */
+}
+
+/* Style cho trạng thái bị khóa (tùy chọn, nếu muốn hiển thị visual lock) */
+.effect-item[data-effect="slicer"] { 
+    font-weight: normal; /* Đảm bảo không in đậm chỉ vì có icon */
+}
+
+/* Nếu có class .locked */
+/*
+.effect-item.locked {
+    border-color: #888;
+    background-color: #222;
+    color: #888;
+    cursor: not-allowed;
+}
+*/
+
+/* CHI TIáº¾T THEM */
+.music-source-panel {
+    /* background-color: #282828; */
+    /* padding: 15px; */
+    /* margin-bottom: 20px; */
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); */
+    width: 100%;
+    /* max-height: 100%; */
+    display: flex;
+    flex-direction: column;
+
+    
+}
+
+.panel-tabs {
+    display: flex;
+    /* margin-bottom: 15px; */
+    /* border-bottom: 1px solid #444; */
+    /* flex-shrink: 0;  */
+    border: 1px solid var(--green);
+}
+
+.panel-tab-button {
+    width: 100%;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background-color: rgb(0, 0, 0, 0.5);
+    color: var(--green);
+    font-size: var(--smallFontSize);
+    font-family: var(--bodyFont);
+
+    /* transition: color 0.3s, border-bottom 0.3s; */
+    border-bottom: 3px solid transparent;
+}
+
+.panel-tab-button.active {
+    color: #000000;
+    background-color: var(--green);
+    font-weight: 600;
+}
+
+.panel-tab-button:hover:not(.active) {
+    background-color: rgb(0, 0, 0, 0.7);
+}
+
+.panel-content-area {
+    background-color: #191919;
+    padding: 20px;
+    flex-grow: 0; 
+    display: flex; /* Äá»ƒ .panel-view.active-view cÃ³ thá»ƒ chiáº¿m toÃ n bá»™ khÃ´ng gian */
+    overflow: hidden; /* QUAN TRá»ŒNG: Giá»¯ láº¡i á»Ÿ Ä‘Ã¢y Ä‘á»ƒ view khÃ´ng trÃ n ra ngoÃ i content-area.
+                         Thanh cuá»™n sáº½ náº±m BÃŠN TRONG .carousel. */
+    position: relative; /* Giá»¯ láº¡i náº¿u cáº§n cho cÃ¡c view con */
+}
+
+.panel-view {
+    display: none; /* Máº·c Ä‘á»‹nh áº©n */
+    width: 100%;
+    /* height: 100%; */
+    flex-direction: column; /* Quan trá»ng: Sáº¯p xáº¿p cÃ¡c thÃ nh pháº§n con (search, carousel) theo chiá»u dá»c */
+    /* overflow: hidden; <- Bá» á»Ÿ Ä‘Ã¢y, Ä‘á»ƒ .carousel tá»± xá»­ lÃ½ cuá»™n cá»§a nÃ³ */
+}
+
+.panel-view.active-view {
+    display: flex; /* Sá»­ dá»¥ng flex Ä‘á»ƒ .carousel bÃªn trong cÃ³ thá»ƒ dÃ¹ng flex-grow */
+    /* display: block; <- Náº¿u báº¡n Ä‘Ã£ cÃ³ display: flex á»Ÿ trÃªn, cÃ¡i nÃ y khÃ´ng cáº§n thiáº¿t ná»¯a vÃ  cÃ³ thá»ƒ gÃ¢y nháº§m láº«n.
+                          Chá»n má»™t trong hai. `flex` thÆ°á»ng tá»‘t hÆ¡n cho bá»‘ cá»¥c con. */
+}
+
+/* Style cho cÃ¡c thÃ nh pháº§n Ä‘iá»u khiá»ƒn BÃŠN TRÃŠN carousel (search, upload controls) */
+.music-source-panel .search-container,
+.music-source-panel .upload-controls,
+.music-source-panel .library-preview-player { /* library-preview-player thÆ°á»ng á»Ÿ dÆ°á»›i carousel */
+    flex-shrink: 0; /* NgÄƒn chÃºng bá»‹ co láº¡i */
+    margin-bottom: 10px; /* Khoáº£ng cÃ¡ch vá»›i carousel */
+    
+}
+.music-source-panel .library-preview-player {
+    margin-top: 10px; /* Náº¿u nÃ³ á»Ÿ dÆ°á»›i carousel */
+    margin-bottom: 0;
+}
+
+
+/* Style cho carousel trong panel */
+.music-source-panel .carousel {
+    /* height: calc(100% - 50px); <- Bá» tÃ­nh toÃ¡n height cá»‘ Ä‘á»‹nh nÃ y,
+                                     hÃ£y Ä‘á»ƒ flex-grow quáº£n lÃ½ chiá»u cao Ä‘á»™ng. */
+    flex-grow: 1;
+    overflow-y: auto; /* QUAN TRá»ŒNG: Chá»‰ cho phÃ©p cuá»™n dá»c KHI Cáº¦N THIáº¾T */
+    overflow-x: hidden; /* NgÄƒn cuá»™n ngang khÃ´ng mong muá»‘n */
+    max-height: 150px;
+    border: 1px solid #333;
+    background-color: #1f1f1f;
+    /* display: flex; vÃ  flex-direction: column; khÃ´ng cáº§n thiáº¿t á»Ÿ Ä‘Ã¢y
+       vÃ¬ .carousel-inner sáº½ xá»­ lÃ½ viá»‡c nÃ y. */
+}
+
+.music-source-panel .carousel-inner {
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+        font-family: var(--bodyFont);
+    /* KhÃ´ng set height á»Ÿ Ä‘Ã¢y, Ä‘á»ƒ nÃ³ tá»± má»Ÿ rá»™ng theo ná»™i dung bÃªn trong */
+}
+
+/* CSS cho scrollbar (tÃ¹y chá»n, Ä‘á»ƒ Ä‘áº¹p hÆ¡n) */
+.music-source-panel .carousel::-webkit-scrollbar {
+    width: 8px;
+}
+.music-source-panel .carousel::-webkit-scrollbar-track {
+    background: #222; /* MÃ u ná»n cá»§a track scrollbar */
+    border-radius: 4px;
+}
+.music-source-panel .carousel::-webkit-scrollbar-thumb {
+    background: #555;
+}
+.music-source-panel .carousel::-webkit-scrollbar-thumb:hover {
+    background: #6E6E6E;
+}
+
+
+/* Style cho item nháº¡c trong carousel upload (giá»¯ nguyÃªn hoáº·c tinh chá»‰nh náº¿u cáº§n) */
+.music-source-panel .panel-upload-item {
+    background-color: #303030;
+    padding: 0px 12px; /* Äiá»u chá»‰nh padding cho phÃ¹ há»£p */
+    display: flex;
+    align-items: center;
+    cursor: grab;
+    border: 1px solid #444;
+    width: 100%; /* Äáº£m báº£o item chiáº¿m Ä‘á»§ chiá»u rá»™ng */
+    box-sizing: border-box; /* Äá»ƒ padding/border khÃ´ng lÃ m tÄƒng kÃ­ch thÆ°á»›c tá»•ng */
+}
+.music-source-panel .panel-upload-item:active {
+    cursor: grabbing;
+}
+
+.music-source-panel .panel-upload-item img {
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
+    margin-right: 12px; /* TÄƒng khoáº£ng cÃ¡ch má»™t chÃºt */
+    flex-shrink: 0;
+}
+
+.music-source-panel .panel-upload-item p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #eee;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+}
+.music-source-panel .panel-upload-item .remove-upload-btn {
+    background: none;
+    border: none;
+    color: #E2F128;
+    cursor: pointer;
+    font-size: 1.1em;
+    padding: 5px;
+    margin-left: 8px; /* ThÃªm chÃºt margin bÃªn trÃ¡i nÃºt xÃ³a */
+    flex-shrink: 0;
+}
+.music-source-panel .panel-upload-item .remove-upload-btn:hover {
+    color: #ff4757;
+}
+
+
+.music-source-panel .empty-carousel-text {
+    display: flex;
+    align-items: center;
+    color: #777;
+    text-align: center;
+    /* padding: 20px; */
+    font-style: italic;
+    height: 100%;
+
+}
+
+.upload-controls {
+
+    align-items: center;
+    margin-bottom: 10px; /* Giá»¯ nguyÃªn */
+    flex-shrink: 0;
+}
+
+.upload-controls .button-style {
+    width: 100%;
+    /* background-color: var(--green); */
+    background-color: transparent;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: var(--bodyFont);
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+.upload-controls .button-style:hover {
+    background-color: var(--green);
+    color: #000;
+}
+/* --- NEW Playlist Container Styles --- */
+.playlist-container {
+    width: 100%;
+
+    border: 1px solid var(--green); /* Border như hình */ 
+    display: flex;
+    flex-direction: column;
+    font-family: var(--bodyFont);
+    /* flex-shrink: 0; <<< Đảm bảo playlist block không bị co lại */
+    /* flex-grow: 1; */
+}
+
+.playlist-header {
+    background-color: rgb(0, 0, 0, 0.5); /* Nền đầu playlist */
+    color: var(--green);
+    padding: 10px;
+    text-align: center;
+    font-size: var(--smallFontSize);
+
+    font-weight: 600;
+
+    border-bottom: 1px solid var(--green);
+}
+
+.playlist-decks-wrapper {
+    display: flex; /* Chia làm 2 cột con */
+    width: 100%;
+    height: 100%;
+}
+
+.playlist-column {
+    flex: 1; /* Mỗi cột chiếm 1 phần bằng nhau */
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--green);
+    overflow-x: auto;
+}
+
+.playlist-column:last-child {
+    border-right: none;
+}
+
+.column-header {
+    color: var(--green);
+    padding: 8px;
+    text-align: center;
+    font-size: var(--bodyFont);
+    font-weight: bold;
+    border-bottom: 1px solid var(--green);
+}
+
+.playlist-items-inner {
+    max-height: 150px;
+    flex-grow: 1;
+    padding: 5px;
+    overflow-y: auto; /* <<< QUAN TRỌNG: Cuộn bên trong danh sách items */
+    background-color: #191919; /* Nền khu vực cuộn */
+}
+
+.empty-playlist-text {
+    color: #777;
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* --- Playlist Item Styles --- */
+.playlist-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin-bottom: 4px;
+    background-color: #2a2a2a;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 0.9em;
+    color: #ddd;
+}
+
+.playlist-item:last-child {
+    margin-bottom: 0; /* Loại bỏ margin dưới cùng cho item cuối */
+}
+
+.playlist-item:hover {
+    background-color: #3a3a3a;
+}
+
+.playlist-item.active {
+    background-color: #4a4a4a;
+    color: #fff;
+    font-weight: bold;
+    /* Optional: add a subtle border or shadow to active item */
+    /* border: 1px solid var(--third); */
+}
+
+.playlist-item-info {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+}
+
+/* --- Remove Button Styles --- */
+.remove-playlist-item-btn {
+    background: none;
+    border: none;
+    color: #ff6b6b; /* Màu đỏ cho nút xóa */
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: color 0.2s ease;
+    flex-shrink: 0; /* Ngăn nút xóa bị co lại */
+}
+
+.remove-playlist-item-btn:hover {
+    color: #ff0000;
+}
+
+/* Style khi kéo (optional) */
+.playlist-item.dragging {
+    opacity: 0.5;
+}
+/* Adjust margins on siblings within deck containers if needed */
+/* Example: Ensure there's space above the effects panel if it follows the playlist */
+/* #deck-a-effectsPanel, #deck-b-effectsPanel { margin-top: 15px; } */ /* Or rely on the gap in parent */
+
+
+/* Popup styling */
+.subscription-popup {
+    /* position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; */
+    font-family: var(--bodyFont);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.8);
+    
+}
+.subscription-popup.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    min-height: 100vh;
+}
+.popup-content {
+    /* padding: 20px;
+    padding-bottom: 0;
+    text-align: center;
+    color: #fff;
+    max-width: 900px;
+    width: 90%; */
+    max-width: 1200px;
+    width: 100%;
+}
+
+.tier-container {
+    /* display: flex;
+    justify-content: space-between;
+    gap: 20px; */
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch; /* Ensures all boxes match height */
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+.tier-column {
+    /* flex: 1;
+    background-color: #000;
+    padding: 20px;
+    border-radius: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; */
+    flex: 1 1 0;
+    max-width: 100%;
+    background-color: #131313;
+    border: 1px solid var(--green);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 250px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+.tier-column:hover {
+    transform: translateY(-5px);
+  }
+
+.tier-column h2 {
+    /* color: #ffcc00;
+    font-size: 24px;
+    margin: 0 0 10px 0; */
+    margin-bottom: 0.5rem;
+    color: var(--green);
+    font-weight: bolder;
+    font-size: var(--bigFontSize);
+}
+.tier-column .price {
+    /* color: #ffcc00;
+    font-size: 28px;
+    margin: 0; */
+    font-size: 2rem;
+    margin: 0.5rem 0;
+    color:  var(--green);
+}
+.tier-column .subtext {
+    /* color: #888;
+    font-size: 12px;
+    margin: 5px 0 15px 0; */
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 1rem;
+}
+.tier-column .features {
+    /* list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+    flex-grow: 1; */
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+.tier-column .features li {
+    /* color: #ffffff;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: center; */
+    margin: 0.5rem 0;
+}
+.tier-column .features li.greyed {
+    color: #a9a9a9;
+}
+.tier-column .upgrade-btn {
+    /* background-color: #ffcc00;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 0;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease; */
+    padding: 0.75rem 1rem;
+    background-color: var(--green);
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+.tier-column .upgrade-btn:hover {
+    background-color: #e6b800;
+}
+.tier-column .upgrade-btn:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+}
+.tier-column .upgrade-btn:disabled:hover {
+    background-color: #666;
+}
+
+.close-btn {
+    width: 100%;
+    background-color: transparent;
+    color: #797979;
+    border: none;
+    justify-content: center;
+    /* padding: 10px 20px; */
+    padding: 0;
+    font-size: 16px;
+    border-radius: 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+.close-btn:hover {
+    background-color: transparent;
+    color: #c3c3c3;
+}
+
+/* P5 */
+.p5Canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}

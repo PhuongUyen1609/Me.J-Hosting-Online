@@ -1,0 +1,1078 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Loos+Wide:wght@800&family=Area+Normal:wght@600&display=swap'); */
+:root {
+    --headerFont: "loos-wide", sans-serif;
+    --bodyFont: "loos-normal", sans-serif;
+
+    --red: #FF335F;
+    --blue: #3F5AD5;
+    --green: #E2F128;
+    --black: #000;
+    --logo-color: #FFFFFF;
+
+    --superbigFontSize: 4.2rem;
+    --bigFontSize: 2.5rem;
+    --mediumFontSize: 2rem;
+    --smallFontSize: 1rem;
+
+    --primary: #3F5AD5;    /* Blue (Deck B) */
+    --secondary: #FF335F; /* Pink (Deck A) */
+    --third: #E2F128;     /* Yellow (Accents, Effects, Borders) */
+    --heading: "loos-wide", sans-serif; /* Main Titles */
+    --orbitron: 'Orbitron', sans-serif; /* For digital displays like time, BPM */
+    --header-height: 30px;
+    --header-bg: #0D0A1A;
+    --center-bg: #3F5AD5;
+    --logo-color: #FFFFFF;
+    --tagline-color: #E2F128;
+    --icon-color: #FF335F;
+    --rec-dot-color: #FF335F;
+    --dark-bg: #05081a;
+    --deck-bg: rgba(10, 10, 20, 0.7);
+    --center-col-bg: rgba(10, 10, 20, 0.75);
+    --text-light: #dde;
+    --text-dark: #111;
+    --effect-item-bg: #333; /* Màu nền item effect */
+    --effect-item-border: #666; /* Màu viền item effect */
+    --effect-item-selected-bg: var(--secondary); /* Nền item effect khi chọn */
+    --effect-item-selected-border: var(--primary); /* Viền item effect khi chọn */
+    --effect-item-selected-color: #000; /* Màu chữ item effect khi chọn */
+}
+
+section {
+    padding: 50px 20px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--bodyFont);
+    font-weight: 200;
+    font-style: normal;
+    font-size: 1rem;
+}
+
+body {
+    /* font-weight: 100; */
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background: #000;
+    color: #fff;
+    min-height: 100vh; /* Đảm bảo chiều cao tối thiểu là 100vh */
+}
+
+/* .darkmode {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    background-color: #f3eca5;
+    mix-blend-mode:exclusion;
+    pointer-events: none;
+    z-index: 9999;
+} */
+
+/* === Header (Keep as is) === */
+.app-header {
+    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, #0B072D, #101010);;
+    height: var(--header-height);
+    padding: 0 25px;
+    color: var(--logo-color);
+    flex-shrink: 0;
+    z-index: 100; /* Header always on top */
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(63, 90, 213, 0.5); /* Subtle separator */
+}
+
+.header-left { display: flex; align-items: center; gap: 10px; font-size: 0.5rem;}
+.logo { font-family: var(--headerFont); font-size: 20px; font-weight: 900; color: var(--logo-color); letter-spacing: -1px;   text-decoration: none;}
+.tagline { font-size: var(--smallFontSize); color: var(--tagline-color); }
+
+.header-center {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    height: 30px; /* Slightly lower dip */
+    display: flex;
+    align-items: flex-start;
+    z-index: 1;
+    overflow: visible; /* Allow shadow */
+}
+
+.center-bg {
+    background: linear-gradient(to bottom, #40349C, #161236);
+    height: 30px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 35px; /* Increased gap */
+    padding: 0 45px; /* Increased padding */
+    border-bottom-left-radius: 50px; /* Smoother curve */
+    border-bottom-right-radius: 50px;
+}
+
+
+.header-right { display: flex; align-items: center; gap: 25px; }
+.nav-link { color: var(--tagline-color); text-decoration: none; font-size: var(--smallFontSize); text-transform: uppercase; transition: color 0.2s ease, opacity 0.2s ease; }
+.nav-link:hover { color: #ffffff; opacity: 0.9; }
+/* Add Hamburger menu icon style if needed */
+.header-right .menu-icon { /* Assuming you add an element with this class */
+    color: var(--tagline-color);
+    font-size: 20px;
+    cursor: pointer;
+}
+.header-right .menu-icon:hover { color: #fff; }
+
+/* CONTENT */
+#p5js-art-container {
+    position: absolute;
+    top: 20%;
+    z-index: -1;
+}
+
+.text1 {
+    margin: 5px;
+    font-size: 1.3rem;
+    display: block;
+    font-weight:lighter
+}
+
+
+#model-container {
+    flex-grow: 1;
+    width: 100%;
+    /* height: calc(100vh - 190px);  */ /* Loại bỏ dòng này */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 190px); /* Đặt min-height thay vì height */
+}
+
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.instruction {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    color: #fff;
+    z-index: 1;
+}
+
+
+/* Main Content */
+/* 3D */
+#scroll-three-container {
+    position: absolute; /* Changed from fixed to absolute */
+    top: 0; /* Start at the top of the page */
+    left: 0;
+    width: 100%;
+    height: 100vh; /* Full viewport height initially */
+    overflow: hidden;
+    z-index: -1;
+}
+
+.main-content {
+    width: 100vw;
+    height: 100vh;
+    /* display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; */
+    /* height: 100vh; */
+}
+
+.main-content-inner {
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+}
+
+
+.main-text {
+    position: absolute; /* Position it in the bottom-right */
+    bottom: 0; /* Distance from bottom */
+    right: 0;
+    padding-right: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.main-title {
+    /* background-color: var(--blue); */
+    color: var(--green);
+    /* text-align: center; */
+    width: 100%;
+    line-height: 100%;
+    font-size: 280px;
+    font-weight: 800;
+    font-family: var(--headerFont);
+}
+
+.text1 {
+    font-family: 'Area Variable', sans-serif;
+    font-weight: 100;
+    font-style: normal;
+    color: #fff;
+    font-size: 28px;
+    text-align: center;
+}
+
+.text1 .highlight {
+    font-style: italic;
+}
+
+.text2 {
+    font-family: 'Area Variable', sans-serif;
+    font-weight: 100;
+    font-style: italic;
+    color: #fff;
+    font-size: 36px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+
+/* .main-title .logo-img {
+    max-width: 100%;
+    height: auto;
+    width: 400px; 
+} */
+
+.button-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 3%;
+}
+
+.main-content-icon {
+    width: fit-content;
+    height: 30px;
+}
+
+#lightmode {
+    padding: 0px 10px !important;
+}
+
+.icon {
+    padding: 0 !important;
+}
+
+/* Background for music button when playing */
+#music.playing {
+    background: var(--red);
+}
+
+
+ /* Instantly hide ::before when playing to prevent slide-out animation */
+#music.playing::before {
+    transform: translateX(-100%);
+    transition: none; /* Disable transition to prevent slide animation */
+}
+
+/* Ensure the background stays red when hovering while playing */
+#music.playing:hover {
+    background: var(--red);
+}
+
+/* Prepare ::before for slide-out animation */
+#music.prepare-slide-out::before {
+    transform: translateX(0); /* Make ::before visible before sliding out */
+    transition: none; /* Instant transition to avoid animation */
+}
+
+/* Slide-out animation when turning music off */
+#music.sliding-out::before {
+    transform: translateX(100%); /* Slide out to the right */
+    transition: transform 0.3s ease;
+}
+
+
+
+#music.sliding-out {
+    background: none;
+    border: 1px solid var(--green);
+}
+
+
+/* Ensure hover effect is disabled during slide-out */
+#music.sliding-out:hover::before {
+    transform: translateX(100%); /* Keep sliding out, even if hovering */
+}
+
+/* Disable hover effect when .hover-disabled is active */
+#music.hover-disabled:hover::before {
+    transform: translateX(-100%); /* Prevent slide-in */
+}
+
+/* Đảm bảo .explore-btn đã có sẵn từ trước */
+.explore-btn {
+    padding: 0px 30px;
+    height: 40px;
+
+    margin: 0;
+    background: none;
+    border: 1px solid var(--green);
+    border-radius: 25px;
+    cursor: pointer;
+
+    position: relative; /* For pseudo-element positioning */
+    overflow: hidden; /* Contain the sliding effect */
+    display: flex; /* Change to flex for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+
+    isolation: isolate; /* Important: keep pseudo inside */
+
+
+}
+
+.explore-btn a {
+    width: 100%; /* Ensure link fills button width */
+    height: 100%; /* Ensure link fills button height */
+    text-decoration: none;
+    color: var(--green);
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.explore-btn:hover a {
+    /* font-style: italic; */
+    transform: skewX(-15deg);
+}
+
+.explore-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: var(--red);
+    transition: left 0.3s ease;
+    z-index: -1;
+}
+
+
+.explore-btn:hover::before {
+    left: 0;
+}
+
+.explore-btn.no-hover::before {
+    left: -100%;
+}
+
+/* Music active state */
+.explore-btn.active::before {
+    left: 0;
+}
+
+/* Căn giữa nút Explore as Guest dưới phần Ending */
+/* .ending-explore {
+    text-align: center; 
+    margin: 20px 0; 
+} */
+
+/* Grid Styles */
+.description-container {
+    height: fit-content;
+    width: 100vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Hai cột bằng nhau */
+    padding: 50px;
+    margin-top: 200px;
+    /* background: linear-gradient(180deg, black 70%, rgba(255, 255, 255, 0) 100%); */
+}
+.description-text  {
+    font-size: var(--bigFontSize);
+    line-height: 1.2;
+}
+
+.description-text span {
+    opacity: 0; /* Start hidden */
+    transition: opacity 0.3s ease; /* Smooth fade */
+    display: inline; /* Ensure spans behave like letters */
+    font-size: inherit; /* Explicitly inherit font-size from parent */
+}
+
+
+/* Why Me.J  */
+.sequence-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 370vh; 
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    /* background-color: #3F5AD5; */
+    z-index: 1;
+}
+
+#sequence-three-container {
+    /* background-color: #aaa; */
+    position: sticky;
+    top: 0;
+    width: 100%; /* Adjust to your image size */
+    height: 100vh;
+    background-size: cover;
+    display: flex; /* For centering texts */
+    flex-direction: column; /* Stack texts vertically */
+    justify-content: center; /* Center vertically */
+    align-items: flex-start; /* Default to left for text1 and text3 */
+    z-index: 1;
+}
+
+.sequence-text {
+    position: relative; /* Changed from fixed to work with sticky container */
+    margin: 20px 0; /* Space between texts */
+    width: 300px; /* Limit width for alignment */
+
+    opacity: 1; /* Container visible, spans control opacity */
+    z-index: 2; /* Above PNG */
+}
+
+.sequence-text div { /* Subtext */
+    margin-top: 10px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.sequence-text span {
+    opacity: 0; /* Letters hidden by default */
+    transition: opacity 0.3s ease; /* Smooth fade-in */
+}
+
+.sequence-text > div:first-child span {
+    font-size: var(--mediumFontSize) !important;
+}
+
+#text1, #text3 {
+    align-self: flex-start; /* Left side */
+    margin-left: 50px; /* Offset from edge */
+    text-align: left;
+}
+
+#text2 {
+    align-self: flex-end; /* Right side */
+    margin-right: 50px; /* Offset from edge */
+    text-align: right;
+}
+
+/* Connecting lines */
+/* .sequence-text::after {
+    content: '';
+    position: absolute;
+    background: #fff; 
+    height: 0.5px;
+    opacity: 0; 
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+} */
+
+#text1::after {
+    top: 3rem; /* Align with middle of main text (2rem font size) */
+    left: 300px; /* End of text1 (300px width + 50px margin) */
+    width: calc((50vw - 350px) - 200px); /* Connect to center, adjusted for dot */
+    transform-origin: left; /* Rotate from the left end */
+    transform: rotate(15deg);
+}
+
+#text2::after {
+    top: 3rem;
+    right: 300px; /* End of text2 (300px width + 50px margin) */
+    width: calc((50vw - 350px) - 200px);
+
+}
+
+#text3::after {
+    top: 3rem;
+    left: 300px;
+    width: calc((50vw - 350px) - 200px); 
+    transform-origin: left; 
+    transform: rotate(-15deg); 
+}
+
+/* Circle at the end of the line */
+/* .sequence-text::before {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+} */
+
+#text1::before {
+    /* Position at the end of the line, accounting for rotation */
+    top: calc(3rem + (sin(15deg) * (50vw - 350px - 200px))); /* + means downward angle, - means upward angles */
+    left: calc(300px + (cos(15deg) * (50vw - 350px - 200px)) - 5px); /* End of the line */
+    transform: translateY(-50%);
+}
+
+#text2::before {
+    top: 3rem;
+    right: calc(300px + (50vw - 350px - 200px) - 5px); /* End of the line */
+    transform: translateY(-50%);
+}
+
+#text3::before {
+    /* Position at the end of the line, accounting for downward rotation */
+    top: calc(3rem - (sin(15deg) * (50vw - 350px - 200px))); 
+    left: calc(300px + (cos(15deg) * (50vw - 350px - 200px)) - 5px); /* End of the line */
+    transform: translateY(-50%);
+}
+
+/* Next section (rest of the page) */
+
+.next-section {
+    width: 100vw;
+    /* height: fit-content; */
+    height: 200vh;
+    position: relative;
+    margin-top: -100vh; /* Pull it up by the viewport height */
+    z-index: 1; /* Make sure it's above the sequence container */
+    background: var(--green); 
+    color: var(--black);
+   
+}
+
+.blocks-container {
+    position: absolute;
+    width: 100%;
+    height: 400px;
+    z-index: 5;
+}
+
+.blocks-container.top {
+    top: 0;
+    /* bottom: 0; */
+}
+
+.blocks-container.bottom {
+    bottom: 0;
+    /* top: 0; */
+}
+
+.blocks-row {
+    width:100%;
+    height: 100px;
+    overflow: hidden;
+    display: flex;
+}
+
+.block {
+    width: 100%;
+    height: 100%;
+    transition: opacity 100ms;
+}
+ 
+.blocks-container.top .blocks-row .block {
+    opacity: 1;
+    background: var(--black);
+}
+
+.blocks-container.bottom .blocks-row .block {
+    opacity: 0;
+    background: var(--black);
+}
+
+  
+/* GUIDE */
+.guide-wrapper {
+    /* width: 100%;
+    height: 100%; */
+    position: sticky;
+    top: 0;
+    min-height: 100vh;
+    display: flex;
+    gap: 50px;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    /* padding: 0 100px; */
+    padding: 100px 50px;
+    /* background-color: #aaa; */
+}
+
+.guide-header {
+    font-size: var(--mediumFontSize);
+}
+
+/* .guide-header span {
+    font-size: inherit;
+    font-weight: bold;
+} */
+
+/* New styles for letter-by-letter animation */
+.guide-header span.letter {
+    opacity: 0; /* Start hidden */
+    transition: opacity 0.3s ease; /* Smooth fade */
+    display: inline; /* Ensure spans behave like letters */
+    font-size: inherit; /* Explicitly inherit font-size from parent */
+}
+
+/* Ensure the existing <span> tags (dynamic and futuristic) are not affected */
+.guide-header span:not(.letter) {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+/* Flex container for left and right sections */
+.guide-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10%;
+
+}
+
+/* Left Section: Guides with Bar */
+.guide-left {
+    position: relative;
+    flex: 1;
+}
+
+.guide-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: #919826; /*  unfilled portion */   
+    opacity: 0;
+}
+
+/* Modified: Container for the filled portion */
+.guide-bar::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: var(--fill-height, 0%);
+    background: var(--red); /* Filled portion */
+    z-index: 1; /* Modified: Ensure the filled portion is on top of the circles */
+}
+.guide-bar-circle {
+    position: absolute;
+    left: -8px; /* Center the circle on the bar (circle width 20px, so -9px centers it) */
+    width: 20px;
+    height: 20px;
+    background: #919826; /* Unfilled state */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--green);
+    z-index: 2; /* Modified: Ensure circles are below the filled portion */
+    overflow: hidden; /* Modified: For clipping the filled portion of the circle */
+}
+
+/* Modified: Display the step number using data-step attribute */
+.guide-bar-circle::before {
+    content: attr(data-step);
+    position: relative;
+    z-index: 4; /* Ensure the number is on top */
+}
+
+.guide-bar-circle::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: var(--circle-fill-height, 0%); /* Controlled by JavaScript */
+    background: var(--red); /* Match the filled bar color */
+    /* transition: height 0.3s ease; */
+    z-index: 3; /* Below the number but above the unfilled background */
+}
+
+.guide-list {
+    margin-left: 10%;
+}
+
+.guide-item {
+    font-size: var(--superbigFontSize);
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    padding-bottom: 40px;
+    position: relative;
+    transition: font-weight 0.3s ease;
+    transition: opacity 0.3s ease;
+    opacity: 0; /* Modified: Hidden by default */
+    border-bottom: 1px solid var(--black);
+}
+
+
+.guide-item.shown {
+    opacity: 1; /* Modified: Show when marked as shown */
+}
+
+.guide-item.active {
+    font-weight: bolder;
+    /* font-weight: bold; */
+    color: var(--red);
+    /* font-style: italic; */
+}
+
+/* Right Section: Visual Guide and Guide Texts */
+.guide-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.visual-guide {
+    width: 100%;
+    max-width: 100%;
+    position: relative; /* Stack images in the same position */
+    padding-bottom: 60.25%; /* Aspect ratio of 16:9 (adjust based on your images) */
+    height: 0; /* Collapse the container's height, but padding-bottom reserves space */
+}
+
+.visual-guide img {
+    width: 100%;
+    height: 100%; /* Fill the container */
+    object-fit: cover; /* Ensure the image scales properly without distortion */
+    position: absolute; /* Stack images on top of each other */
+    top: 0;
+    left: 0;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease; /* Fade transition */
+}
+
+.visual-guide img.active {
+    opacity: 1; /* Show the active image */
+}
+
+.visual-guide img.exiting {
+    opacity: 0; /* Fade out when exiting */
+    transition: opacity 0.5s ease; /* Slightly longer fade-out for a smoother effect */
+}
+
+.guide-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.guide-text-wrapper {
+    position: relative;
+    min-height: 150px; /* Ensure enough space for text */
+    overflow: visible;
+}
+
+.guide-text {
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.guide-text.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.guide-text.exiting {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* SUBSCRIPTION */
+.subscription-popup {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    min-height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .popup-content {
+    max-width: 1200px;
+    width: 100%;
+  }
+
+  .tier-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch; /* Ensures all boxes match height */
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tier-column {
+    flex: 1 1 0;
+    max-width: 100%;
+    background-color: #131313;
+    border: 1px solid var(--green);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 250px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+  }
+
+  .tier-column:hover {
+    transform: translateY(-5px);
+  }
+
+  .tier-column h2 {
+
+    margin-bottom: 0.5rem;
+    color: var(--green);
+    font-weight: bolder;
+    font-size: var(--bigFontSize);
+  }
+
+  .price {
+    font-size: 2rem;
+    margin: 0.5rem 0;
+    color:  var(--green);
+  }
+
+  .subtext {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 1rem;
+  }
+
+  .features {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin-bottom: 1.5rem;
+  }
+
+  .features li {
+    margin: 0.5rem 0;
+  }
+
+  .greyed {
+    color: #a9a9a9;
+  }
+
+  .upgrade-btn {
+    padding: 0.75rem 1rem;
+    background-color: var(--green);
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .upgrade-btn:hover:enabled {
+    background-color: transparent;
+    color: var(--green);
+    border: 1px solid var(--green);
+  }
+
+  .upgrade-btn:disabled {
+    background-color: #444;
+    cursor: default;
+    color: #888;
+  }
+
+@media (max-width: 768px) {
+    /* TITLE */
+    .main-title {
+        font-size: 8rem;
+    }
+
+    .description-text {
+        font-size: 1rem;
+    }
+
+    /* GUIDE */
+    .guide-item {
+        font-size: var(--mediumFontSize);
+    }
+
+    .description-container {
+        display: block;
+    }
+
+    /* SUBSCRIPTION TIER */
+    .tier-container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tier-column {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    /* ENDING */
+    .horizontal-line {
+        display: none;
+    }
+
+    .arrow-container img {
+        display: none;
+    }
+
+}
+
+
+/* Ending Section */
+.ending-section {
+    width: 100%;
+    height: 100%;
+    background: var(--black); 
+    position: relative;
+    overflow: hidden;
+   
+}
+
+.CTA-wrapper {
+    width: 100%;
+    height: 100%;
+    padding: 0 50px;
+    padding-top: 100px;
+    
+}
+
+
+
+.CTA {
+    display: flex;
+    flex-direction: column;
+
+    position: relative;
+    top: 40%;
+
+}
+
+/* .CTA .main-title {
+    padding-left: 40px;
+} */
+
+/* .vertical-line {
+    position: absolute;
+    left: 50px; 
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    height: 0;
+    background-color: white;
+    transition: height 0.3s ease-in-out;
+}
+
+.vertical-line.active {
+    height: 76.5%; 
+} */
+
+
+.CTA-bottom {
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.arrow-container {
+    display: flex;
+    flex: 1;
+    align-items: center;
+
+}
+
+.horizontal-line {
+    width: 0;
+    height: 1px;
+    background-color: white;
+    transition: width 0.3s ease-in-out 0.3s; 
+}
+
+.horizontal-line.active {
+    width: 95%; /* Your final width */
+}
+
+/* 
+.ending-img {
+    max-width: 30%;
+    height: auto;
+    display: block;
+} */
+.tagline-end {
+    overflow: hidden;
+    position: relative;
+    /* position: absolute; 
+    bottom: -20px; */
+    /* width: 100%; */
+    /* border-bottom: 1px solid #fff;
+    border-top: 1px solid #fff; */
+    /* padding: 20px 0;
+    margin-bottom: 30px; */
+    display: flex;
+}
+
+.tagline-inner {
+    display: flex;
+    white-space: nowrap;
+    animation: marquee 55s linear infinite;
+}
+
+.tagline-end span{
+    font-family: var(--headerFont);
+    font-weight: bold;
+    font-size: 9rem;
+    /* color: var(--blue); */
+    margin-right: 60px;
+    text-transform:uppercase;
+    display: inline-block; /* Make spans inline-block for animation */
+}
+
+
+@keyframes marquee {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(-33.333333%);
+    }
+}
+
+.footer-bottom {
+    width: 100%;
+    position: absolute; 
+    bottom: 0;
+    text-align: right;
+    color: #565656;
+    font-size: 0.5rem;
+}

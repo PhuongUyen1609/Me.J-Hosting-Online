@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Me.J</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="https://use.typekit.net/jae5omc.css">
+
+
+</head>
+<body>
+    <!-- <div class="darkmode"></div> -->
+
+     <!-- === HEADER === -->
+     <header class="app-header">
+        <div class="header-left">
+            <span class="logo"> Me.J </span>
+            <span class="tagline">Move, Mix, Master</span>
+        </div>
+        <div class="header-right">
+            <a href="#signup" class="nav-link">SIGNUP</a>
+            <a href="#login" class="nav-link">LOG IN</a>
+        </div>
+    </header>
+
+    <!-- === MAIN CONTAINER === -->
+    <main class="main-content">
+        
+
+        <!-- p5.js Art Container -->
+        <div id="p5js-art-container" style="width: 100%; height: 600px;"></div>
+
+        <div class="main-content-inner">
+            <div class="main-text">
+                <div class="button-wrapper">
+                    <div class="explore-btn icon" id="lightmode">
+                        <img class="main-content-icon" src="/static/index_picture/lightmode2.gif">
+                    </div>
+                    <div class="explore-btn icon" id="music">
+                        <img class="main-content-icon" src="/static/index_picture/sound3.gif">
+                    </div>
+                    <div class="explore-btn">
+                        <a href="/guest" onclick="window.location.href='guest.html'">EXPLORE AS GUEST</a>
+                    </div>
+                </div>
+
+                <!-- Add audio element for background music -->
+                <audio id="background-music" loop>
+                    <source src="/static/index_sound/password-infinity.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+               
+                <div class="main-title">
+                  Me.J
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- 3D Model Container -->
+    <div id="scroll-three-container"></div>
+
+
+    <!-- DESCRIPTION Layout -->
+    <div class="description-container">
+        <div class="description-text">
+            Turn your hand movements into music with Me.J, a website that brings a new dimension to digital sound creation.
+                Wave, swipe, and gesture to control beats, melodies, and effects in real-time – no physical controllers needed.
+                Perfect for DJs looking to add visual flair to their sets, producers seeking inspiration through movement, or
+                performers wanting to create an unforgettable experience.
+        </div>
+    </div>
+
+    <!-- <div id="model-container">
+        <div class="error-message" id="error-message"></div>
+    </div> -->
+
+    <!-- Why Me.J Section -->
+  
+        <div class="sequence-wrapper">
+            <div id="sequence-three-container">
+                <div class="sequence-text" id="text1">No need for complex DJ equipment 
+                    <div>
+                        Say goodbye to bulky, expensive DJ gear—Me.J lets you create, control, and perform music using nothing
+                        but your hands. 
+                    </div>
+                </div>
+                <div class="sequence-text" id="text2">Adjust music through hand movements
+                    <div>
+                        With Me.J, your hands become powerful musical tools, allowing you to shape and adjust sound in real-time
+                        with simple gestures. 
+                    </div>
+                </div>
+                <div class="sequence-text" id="text3"> Supports popular DJ sound effects 
+                    <div>
+                        Experience professional DJ sound effects at your fingertips—Me.J seamlessly integrates a wide range of
+                        effects to elevate your performance.
+                    </div>
+                </div>
+            </div>
+        </div>
+         
+    
+    <div class="next-section" id="next-section">
+            <!-- <div class="blocks-container top">
+                <div class="blocks-row"></div>
+                <div class="blocks-row"></div>
+                <div class="blocks-row"></div>
+                <div class="blocks-row"></div>
+            </div> -->
+            <div class="blocks-container bottom">
+                <div class="blocks-row"></div>
+                <div class="blocks-row"></div>
+                <div class="blocks-row"></div>
+                <div class="blocks-row"></div>
+            </div>
+            
+        <div class="guide-wrapper">
+            <div class="guide-header">
+                Experimental user interface with <br>
+                <span>dynamic</span> and <span>futuristic</span> design.
+            </div>
+
+            <div class="guide-content">
+                <!-- Left Section: Guides with Bar -->
+                <div class="guide-left">
+                    <div class="guide-bar">
+                        <div class="guide-bar-circle" data-step="1"></div>
+                        <div class="guide-bar-circle" data-step="2"></div>
+                        <div class="guide-bar-circle" data-step="3"></div>
+                    </div>
+                    <div class="guide-list">
+                        <div class="guide-item" data-guide="1">Connect Camera</div>
+                        <div class="guide-item" data-guide="2">Upload Music</div>
+                        <div class="guide-item" data-guide="3">Start Mixing</div>
+                    </div>
+                </div>
+                <!-- Right Section: Visual Guide and Guide Texts -->
+                <div class="guide-right">
+                    <div class="visual-guide">
+                        <img src="/static/index_picture/guide1.png" alt="Visual Guide">
+                        <img src="/static/index_picture/guide2.png" alt="Visual Guide">
+                        <img src="/static/index_picture/guide3.png" alt="Visual Guide">
+                    </div>
+                    <div class="guide-text-wrapper">
+                        <div class="guide-text" data-guide="1">
+                            Me.J uses your webcam to see and interpret your hand gestures. Please grant camera access when prompted by your browser to begin. Use your device webcam or an external camera for better accuracy. Make sure the camera is steady and positioned well for gesture detection.
+                        </div>
+                        <div class="guide-text" data-guide="2">
+                            Import your own tracks or explore Me.J’s online library. Whether it’s your personal beats or sample sounds, get your music ready for live mixing.
+                        </div>
+                        <div class="guide-text" data-guide="3">
+                            Position yourself so your hands are clearly visible within the webcam feed shown on screen. Good lighting and a relatively plain background will help the tracking work best. Make sure your movements stay within the camera's view.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <!-- <div style="height: 200vh;"></div> -->
+    </div>
+
+    <div id="subscriptionPopup" class="subscription-popup">
+        <div id="subscriptionPopup" class="subscription-popup">
+            <div class="popup-content">
+              <div class="tier-container">
+                <!-- Free Tier -->
+                <div class="tier-column">
+                    <div class="tier-content">
+                        <h2>Free</h2>
+                        <p class="price">$0</p>
+                        <p class="subtext">&nbsp;</p>
+                        <ul class="features">
+                            <li>5 sound effects</li>
+                            <li>Limited tracks upload</li>
+                            <li>Basic Visualizer Mode</li>
+                        </ul>
+                    </div>
+                  <button class="upgrade-btn" disabled>Current Plan</button>
+                </div>
+                <!-- Standard Tier -->
+                <div class="tier-column">
+                    <div class="tier-content">
+                        <h2>Standard</h2>
+                        <p class="price">$2.99</p>
+                        <p class="subtext">One time payment</p>
+                        <ul class="features">
+                            <li>3+ sound effects</li>
+                            <li>Unlimited tracks upload</li>
+                            <li>Remove watermark</li>
+                            <li>Record + save mix as sound files</li>
+                            <li>Unlock Live Mode</li>
+                            <li class="greyed">Basic Visualizer Mode</li>
+                        </ul>
+                    </div>
+                 
+                  <button class="upgrade-btn">Upgrade to Standard</button>
+                </div>
+                <!-- Premium Tier -->
+                <div class="tier-column">
+                    <div class="tier-content">
+                      <h2>Premium</h2>
+                        <p class="price">$4.99</p>
+                        <p class="subtext">One time payment</p>
+                        <ul class="features">
+                            <li>Unlock all sound effects</li>
+                            <li>Advanced Visualizer Mode</li>
+                            <li>Record + save mix as video files</li>
+                            <li>Gestures customization</li>
+                            <li class="greyed">Unlimited tracks upload</li>
+                            <li class="greyed">Remove watermark</li>
+                            <li class="greyed">Record + save mix as sound files</li>
+                            <li class="greyed">Unlock Live Mode</li>
+                        </ul>  
+                    </div>
+                  
+                  <button class="upgrade-btn">Upgrade to Premium</button>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+
+
+
+    <!-- Ending Section -->
+    <div class="ending-section">
+        <div class="CTA-wrapper">
+            <div class="vertical-line"></div>
+            <div class="CTA">
+                <!-- <img src="/static/index_picture/Ending.png" alt="Ending Image" class="ending-img"> -->
+                <div class="main-title">
+                    Me.J
+                </div>
+
+                <!-- Second Explore as Guest Section -->
+
+                <div class="CTA-bottom">
+                    <div class="arrow-container">
+                        <div class="horizontal-line"></div>
+                        <img src="/static/index_picture/Arrow head.svg">
+                    </div>
+
+                    <div class="button-wrapper-end">
+                         <div class="explore-btn ending-explore">
+                        <a href="/guest" onclick="window.location.href='guest.html'">EXPLORE AS GUEST</a>
+                    </div>
+                    </div>
+                    
+                   
+                </div>
+            
+             </div>
+        </div>
+       
+
+        <!-- <div class="footer-bottom">
+                © 2025 Me.J. All rights reserved.
+        </div> -->
+        <!-- Tagline -->
+        <div class="tagline-end">
+            <div class="tagline-inner">
+                <span>*</span>
+                <span>a performance</span>
+                <span>*</span>
+                <span>a dance</span>
+                <span>*</span>
+                <span>an experience</span>
+                <span>*</span>
+                <span>an innovation</span>
+                
+                <!-- Duplicate the entire sequence for smooth looping -->
+                <span>*</span>
+                <span>a performance</span>
+                <span>*</span>
+                <span>a dance</span>
+                <span>*</span>
+                <span>an experience</span>
+                <span>*</span>
+                <span>an innovation</span>
+                <!-- Duplicate the entire sequence for smooth looping -->
+                <span>*</span>
+                <span>a performance</span>
+                <span>*</span>
+                <span>a dance</span>
+                <span>*</span>
+                <span>an experience</span>
+                <span>*</span>
+                <span>an innovation</span>
+            </div>
+        </div>
+    </div>
+
+    
+
+
+    <!-- Scripts -->
+         <!-- script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simplex-noise@2.4.0/simplex-noise.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    
+
+
+    <script src="/static/backend/why-mej.js"></script>
+    <script src="/static/backend/disk.js"></script>
+    <script src="/static/backend/description-text.js"></script>
+    <script src="/static/backend/music-toggle.js"></script>
+    <script src="/static/backend/guide.js"></script>
+    <script src="/static/backend/ending-section.js"></script>
+
+    <script>
+        let squares = [];
+    const numSquares = 30;
+    const squareSize = 6;
+    const minDistance = 10; // Repulsion distance
+    const maxInfluenceDistance = 500; // Max distance for cursor influence
+    const texts = ["Me.J", "Interactive", "Dynamic", "Futuristic", "Music", "Creative"];
+    let textChangeTimer = 0;
+    let noiseOffset = 0; // For Perlin noise animation
+
+    function setup() {
+        let canvas = createCanvas(windowWidth, windowHeight);
+        canvas.parent('p5js-art-container');
+        textAlign(CENTER, CENTER);
+        textSize(14);
+        fill(255);
+        for (let i = 0; i < numSquares; i++) {
+            let x = random(width);
+            let y = random(height);
+            squares.push({
+                x: x,
+                y: y,
+                vx: 0,
+                vy: 0,
+                origX: x, // Original position
+                origY: y,
+                text: random(texts),
+                noiseX: random(1000), // Unique noise offset for X
+                noiseY: random(1000), // Unique noise offset for Y
+            });
+        }
+    }
+
+    function draw() {
+        background(0); // Black background
+
+        if (millis() - textChangeTimer > 1000) {
+            for (let sq of squares) {
+                sq.text = random(texts);
+            }
+            textChangeTimer = millis();
+        }
+
+        noiseOffset += 0.01; // Slow noise progression for floating
+
+        for (let i = 0; i < numSquares; i++) {
+            let sq = squares[i];
+
+            // Slow floating using Perlin noise
+            sq.vx += map(noise(sq.noiseX + noiseOffset), 0, 1, -0.5, 0.5);
+            sq.vy += map(noise(sq.noiseY + noiseOffset), 0, 1, -0.5, 0.5);
+
+            // Cursor influence when inside canvas
+            if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+                let dx = mouseX - sq.x;
+                let dy = mouseY - sq.y;
+                let distance = sqrt(dx * dx + dy * dy);
+
+                if (distance < maxInfluenceDistance && distance > 0) {
+                    let influence = (1 - distance / maxInfluenceDistance) * 1; //adjust influence here
+                    sq.vx += (dx / distance) * influence;
+                    sq.vy += (dy / distance) * influence;
+                }
+            }
+
+            // Spring back to original position
+            let dxOrig = sq.origX - sq.x;
+            let dyOrig = sq.origY - sq.y;
+            let distToOrig = sqrt(dxOrig * dxOrig + dyOrig * dyOrig);
+            if (distToOrig > 0) {
+                let springForce = 0.02 * distToOrig;
+                sq.vx += (dxOrig / distToOrig) * springForce;
+                sq.vy += (dyOrig / distToOrig) * springForce;
+            }
+
+            // Repulsion to maintain distance
+            for (let j = 0; j < numSquares; j++) {
+                if (i !== j) {
+                    let other = squares[j];
+                    let distBetween = dist(sq.x, sq.y, other.x, other.y);
+                    if (distBetween < minDistance && distBetween > 0) {
+                        let repelForce = (minDistance - distBetween) * 0.05;
+                        sq.vx += (sq.x - other.x) * repelForce;
+                        sq.vy += (sq.y - other.y) * repelForce;
+                    }
+                }
+            }
+
+            // Update position with damping
+            sq.vx *= 0.92;
+            sq.vy *= 0.92;
+            sq.x += sq.vx;
+            sq.y += sq.vy;
+
+            // Bounce off edges
+            if (sq.x < 0 || sq.x > width) sq.vx *= -1;
+            if (sq.y < 0 || sq.y > height) sq.vy *= -1;
+
+            // Draw square
+            fill(255, 51, 95); // Red
+            noStroke();
+            rect(sq.x, sq.y, squareSize, squareSize);
+
+            // Draw text
+            fill(63, 90, 213); // Blue
+            text(sq.text, sq.x + squareSize / 2, sq.y - squareSize / 2 - 5);
+        }
+
+        // Draw lines between nearby squares
+        stroke(100);
+        for (let i = 0; i < numSquares; i++) {
+            for (let j = i + 1; j < numSquares; j++) {
+                let d = dist(squares[i].x, squares[i].y, squares[j].x, squares[j].y);
+                if (d < 300 && random(1) > 0.7) {
+                    strokeWeight(0.5);
+                    line(squares[i].x, squares[i].y, squares[j].x, squares[j].y);
+                }
+            }
+        }
+    }
+
+    function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+    }
+    </script>
+</body>
+</html>

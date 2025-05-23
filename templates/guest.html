@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Music Mixer with Hand Tracking</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://use.typekit.net/jae5omc.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="../static/css/guest.css">
+
+    <!-- p5.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+
+
+    <style>
+        /* Waveform canvas styling */
+        #waveform-canvas {
+            width: 800px;
+            height: 100px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        /* Progress bar transition for smooth updates */
+        .progress-bar,
+        .progress-bar-b {
+            transition: width 0.1s linear;
+        }
+
+        /* Cover art styling */
+        .cover-art,
+        .cover-art-b {
+            width: 100px;
+            height: 100px;
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+
+<body>    
+    <!-- === HEADER === -->
+    <header class="app-header">
+        <div class="header-left">
+            <span class="logo">Me.J </span>
+            <span class="tagline">Move, Mix, Master</span>
+        </div>
+        <div class="header-center">
+            <div class="center-bg">
+                <span class="icon rec-icon">
+                    <i class="fas fa-circle"></i> REC
+                </span>
+                <!-- <span class="icon eq-icon">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </span> -->
+                <span class="icon camera-icon">
+                    <i class="fas fa-camera"></i>
+                </span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="#signup" class="nav-link">SIGNUP</a>
+            <a href="#login" class="nav-link">LOG IN</a>
+        </div>
+    </header>
+
+    <!-- Popup for subscription tier -->
+    <div id="subscriptionPopup" class="subscription-popup">
+        <div class="popup-content">
+            <div class="tier-container">
+                <!-- Free Tier -->
+                <div class="tier-column">
+                    <div class="tier-content">
+                        <h2>Free</h2>
+                        <p class="price">$0</p>
+                        <p class="subtext">&nbsp;</p>
+                        <ul class="features">
+                            <li>5 sound effects</li>
+                            <li>Limited tracks upload</li>
+                            <li>Basic Visualizer Mode</li>
+                        </ul>
+                    </div>
+                    <button class="upgrade-btn" disabled>Current Plan</button>
+                </div>
+                <!-- Standard Tier -->
+                <div class="tier-column">
+                    <div class="tier-content">
+                        <h2>Standard</h2>
+                        <p class="price">$2.99</p>
+                        <p class="subtext">One time payment</p>
+                        <ul class="features">
+                            <li>3+ sound effects</li>
+                            <li>Unlimited tracks upload</li>
+                            <li>Remove watermark</li>
+                            <li>Record + save mix as sound files</li>
+                            <li>Unlock Live Mode</li>
+                            <li class="greyed">Basic Visualizer Mode</li>
+                        </ul>
+                    </div>
+    
+                    <button class="upgrade-btn">Upgrade to Standard</button>
+                </div>
+                <!-- Premium Tier -->
+                <div class="tier-column">
+                    <div class="tier-content">
+                        <h2>Premium</h2>
+                        <p class="price">$4.99</p>
+                        <p class="subtext">One time payment</p>
+                        <ul class="features">
+                            <li>Unlock all sound effects</li>
+                            <li>Advanced Visualizer Mode</li>
+                            <li>Record + save mix as video files</li>
+                            <li>Gestures customization</li>
+                            <li class="greyed">Unlimited tracks upload</li>
+                            <li class="greyed">Remove watermark</li>
+                            <li class="greyed">Record + save mix as sound files</li>
+                            <li class="greyed">Unlock Live Mode</li>
+                        </ul>
+                    </div>
+    
+                    <button class="upgrade-btn">Upgrade to Premium</button>
+                </div>
+            </div>
+             <button id="closePopupButton" class="close-btn">Close</button>
+        </div>
+
+       
+    
+    </div>
+
+    <!-- === MAIN CONTAINER === -->
+    
+
+    <div class="container">
+
+        <!-- Waveform for Deck A - old-->
+        <!-- <div class="waveform-container" id="deck-a-waveform-container">
+            <div id="waveform"></div>
+        </div> -->
+
+        <!-- Waveform for Deck B - old-->
+        <!-- <div class="waveform-container" id="deck-b-waveform-container">
+            <div id="waveform-b"></div>
+        </div> -->
+
+        <!-- new waveform -->
+        <div id="deck-a-waveform-container">
+            <canvas id="waveform" width="512" height="28"></canvas>
+        </div>
+        <div id="deck-b-waveform-container">
+            <canvas id="waveform-b" width="512" height="28"></canvas>
+        </div>
+
+        <div class="under-waveform">
+            <!-- BG visual  -->
+            <div class="under-waveform-left">
+                <div class="visualizer-mode">Visualizer Mode</div>
+                
+                <div id="backgroundSelector" class="background-selector">
+                    <button id="backgroundButton"><span>Virtual Background</span></button>
+                    <div id="backgroundDropdown" class="background-dropdown">
+                        <div class="disable-background background-option">
+                            <img src="/static/index_picture/background visual/disable button 2.png" alt="Disable Background"
+                                class="disable-image bg-image">
+                        </div>
+                        <div class="background-option" data-bg="bg1">
+                            <img src="/static/index_picture/background visual/glitch thumbnail.png" alt="Background 1"
+                                class="bg-image">
+                        </div>
+                        <div class="background-option" data-bg="bg2">
+                            <img src="/static/index_picture/background visual/retro thumbnail.png" alt="Background 2"
+                                class="bg-image">
+                        </div>
+                        <div class="background-option" data-bg="bg3">
+                            <img src="/static/index_picture/background visual/diamond thumbnail.png" alt="Background 3"
+                                class="bg-image">
+                        </div>
+                        <div class="background-option locked-option" data-bg="bg4">
+                            <img src="/static/index_picture/background visual/locked thumbnail.png" alt="Locked Background"
+                                class="bg-image">
+                        </div>
+                    </div>
+                </div>
+        
+                <div id="visualSelector" class="visual-selector">
+                    <button id="visualButton"><span>Interactive Visual</span></button>
+                    <div id="visualDropdown" class="visual-dropdown">
+                        <div class="disable-visual visual-option">
+                            <img src="/static/index_picture/background visual/disable button 2.png" alt="Disable Visual" class="disable-image bg-image">
+                        </div>
+                        <div class="visual-option" data-visual="trail">
+                            <img src="/static/index_picture/background visual/glitch thumbnail.png" alt="Trail Visual" class="bg-image">
+                        </div>
+                        <!-- Placeholder for future visuals -->
+                        <div class="visual-option locked-option" data-visual="future1">
+                            <img src="/static/index_picture/background visual/locked thumbnail.png" alt="Locked Visual" class="bg-image">
+                        </div>
+                    </div>
+                </div>
+        
+            </div>
+        
+            <div class="crossfader-container">
+                <input type="range" id="crossfader" min="0" max="100" value="50">
+                <span id="crossfaderStatus">50%</span>
+            </div>
+
+            <div class="under-waveform-right">
+                <div class="live-mode locked-option">Live Mode</div>
+                <div class="gesture-customization locked-option">Gesture Customizer</div>
+            </div>
+        </div>
+        
+            <!-- === COLUMN 2: WEBCAM & MAIN CONTROLS === -->
+            <div class="webcam-wrapper">
+                <div class="webcam-container">
+                    <video class="input_video" id="main-inputVideo" autoplay playsinline></video>
+                    <canvas class="output_canvas" id="main-outputCanvas" width="480" height="360"></canvas>
+                    <div id="gestureCue"></div>
+                </div>
+            </div>
+
+        
+
+        <!-- Main Content Area (3 columns) -->
+        <div class="main-content">
+                            <!--  Effect Carousel -->
+                            <div class="effect-carousel-container">
+                                <div class="effect-carousel" id="effectCarousel">
+                                    <div class="effect-item locked-option" data-effect="slicer">Slicer</div>
+                                    <div class="effect-item" data-effect="delay">Delay</div>
+                                    <div class="effect-item" data-effect="distortion">Distortion</div>
+                                    <div class="effect-item" data-effect="default">Default</div>
+                                    <div class="effect-item" data-effect="filter">Filter</div>
+                                    <div class="effect-item" data-effect="reverb">Reverb</div>
+                                    <div class="effect-item" data-effect="pitch">Pitch</div>
+                                   
+                                   
+                                </div>
+                            </div>
+              
+            <!-- === COLUMN 1: DECK A CONTROLS === -->
+            <div class="controls-container" id="deck-a-container">
+                <!-- Song Player Area A -->
+                <div class="song-container" id="deck-a-song-container">
+                    <div class="song-container-top">
+                        <div class="song-info" id="deck-a-song-info">
+                            <!-- <div id="musicInfo">No track loaded</div> -->
+                            <div class="cover-art" id="deck-a-coverArt"></div>
+                            <div class="duration-bar">
+                                <span class="current-time" id="deck-a-currentTime">00:00</span>
+                                <div class="progress-container">
+                                    <div class="progress-bar" id="deck-a-progressBar"></div>
+                                </div>
+                                <span class="total-time" id="deck-a-totalTime">00:00</span>
+                            </div>
+                           
+                            <!-- <button id="playStopBtn">Play</button> -->
+                        </div>
+
+                        <!-- volume-control -->
+                        <div class="volume-control">
+                            <div class="slider-track">
+                                <input type="range" id="volumeSlider" min="0" max="100" value="50" orient="vertical">
+                            </div>
+                            <p id="volumeStatus">50%</p>
+
+                            <button id="playStopBtn">Play</button>
+                        </div>
+                    </div>
+
+                    <div class="song-container-bottom">
+                        <div id="musicInfo">No track loaded</div>
+                    </div>
+                </div>
+
+                <div class="music-source-panel">
+                    <div class="panel-tabs">
+                        <button id="tab-upload-music" class="panel-tab-button active">Upload Music</button>
+                        <button id="tab-browse-online" class="panel-tab-button">Browse Online</button>
+                    </div>
+
+                    <div class="panel-content-area">
+                        <!-- View cho Upload Music -->
+                        <div id="upload-view" class="panel-view active-view">
+                            <div class="upload-controls">
+                                <input type="file" id="panel-file-upload-input" accept="audio/*" multiple
+                                    style="display: none;">
+                                <button id="trigger-panel-upload-button" class="button-style">
+                                    <i class="fas fa-plus-circle"></i> Add Files
+                                </button>
+                                <span id="upload-panel-status"
+                                    style="margin-left: 10px; font-size: 0.9em; color: #ccc;"></span>
+                            </div>
+                            <div class="carousel" id="panel-upload-carousel">
+                                <div class="carousel-inner" id="panel-upload-carousel-inner">
+                                    <!-- Các item nhạc đã upload trong panel sẽ hiện ở đây -->
+                                    <p class="empty-carousel-text">Upload files to see them here. Drag to decks.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- View cho Browse Online (Thư viện nhạc hiện tại) -->
+                        <div id="browse-online-view" class="panel-view">
+                            <!-- Di chuyển các thành phần thư viện hiện tại của bạn vào đây -->
+                            <div class="search-container">
+                                <input type="text" id="library-searchInput" placeholder="Search in library...">
+                                <button id="library-searchBtn"><i class="fas fa-search"></i></button>
+                            </div>
+                            <div class="carousel" id="music-library-carousel">
+                                <div class="carousel-inner" id="music-library-carousel-inner">
+                                    <!-- Thư viện nhạc từ cloud sẽ load ở đây (như cũ) -->
+                                </div>
+                            </div>
+                            <!-- Player preview (nếu có và muốn giữ lại ở đây) -->
+                            <!-- <div class="library-preview-player" id="library-preview-container"
+                                style="display: none; margin-top: 10px; padding: 8px; border: 1px solid #333; border-radius: 4px; background-color: #1e1e1e;">
+                                <p id="library-preview-info"
+                                    style="margin: 0 0 5px 0; font-size: 0.85em; color: #ddd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center;">
+                                    No track selected for preview
+                                </p>
+                                <audio id="library-preview-audio" controls style="width: 100%; height: 35px;"></audio>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Controls Buttons & Effects A -->
+                <!-- <div class="controls" id="deck-a-controls">
+                                    <div id="deck-a-effectsPanel">
+                                        <div class="panel-header">Effects</div>
+                                        <div class="effect-row">
+                                            <span class="effect-name">Delay</span>
+                                            <span class="effect-value" id="delayStatus">0</span>
+                                        </div>
+                                        <div class="effect-row">
+                                            <span class="effect-name">Distort</span>
+                                            <span class="effect-value" id="distortionStatus">0</span>
+                                        </div>
+                                        <div class="effect-row">
+                                            <span class="effect-name">Pitch</span>
+                                            <span class="effect-value" id="pitchStatus">0</span>
+                                        </div>
+                                        <div class="effect-row">
+                                            <span class="effect-name">Reverb</span>
+                                            <span class="effect-value" id="reverbStatus">0</span>
+                                        </div>
+                                        <div class="effect-row">
+                                            <span class="effect-name">Speed</span>
+                                            <span class="effect-value" id="speedStatus">1.0x</span>
+                                        </div>
+                                        <div class="effect-row">
+                                            <span class="effect-name">Phaser</span>
+                                            <span class="effect-value" id="deck-a-phaserStatus">0</span>
+                                        </div>
+                                    </div>
+                                </div> -->
+            </div>
+
+            <!-- === COLUMN 2: WEBCAM & MAIN CONTROLS === -->
+            <!-- <div class="webcam-wrapper">
+                <div class="webcam-container">
+                    <video class="input_video" id="main-inputVideo" autoplay playsinline></video>
+                    <canvas class="output_canvas" id="main-outputCanvas" width="480" height="360"></canvas>
+                    <div id="gestureCue"></div>
+                </div>
+            </div> -->
+
+            <!-- === COLUMN 3: DECK B CONTROLS === -->
+            <div class="blank-container" id="deck-b-container">
+                <div class="song-container-b" id="deck-b-song-container">
+                    <div class="song-container-top">
+                        <!-- volume control -->
+                        <div class="volume-control-b">
+                            <div class="slider-track">
+                                <input type="range" id="volumeSliderB" min="0" max="100" value="50" orient="vertical">
+                            </div>
+                            <p id="volumeStatusB">50%</p>
+
+                            <button id="playStopBtnB">Play</button>
+                        </div>
+
+                        <div class="song-info-b" id="deck-b-song-info">
+                            <!-- <div id="musicInfoB">No track loaded</div> -->
+                            <div class="cover-art-b" id="deck-b-coverArt"></div>
+                            <div class="duration-bar-b">
+                                <span class="current-time-b" id="deck-b-currentTime">00:00</span>
+                                <div class="progress-container-b">
+                                    <div class="progress-bar-b" id="deck-b-progressBar"></div>
+                                </div>
+                                <span class="total-time-b" id="deck-b-totalTime">00:00</span>
+                            </div>
+
+                            <!-- <button id="playStopBtnB">Play</button> -->
+                        </div>
+                    </div>
+
+                    <div class="song-container-bottom">
+                        <div id="musicInfoB">No track loaded</div>
+                    </div>   
+                </div>
+                <!-- NEW Main Playlist Carousel - ADD THIS BLOCK -->
+                <div id="main-playlist-container" class="playlist-container">
+                    <div class="playlist-header">Playlist</div>
+                    <div class="playlist-decks-wrapper">
+                        <div id="deck-a-playlist-column" class="playlist-column">
+                            <div class="column-header" style="background-color: #FF335F;">Deck A</div>
+                            <div class="playlist-items-inner" id="deck-a-playlist-inner">
+                                <!-- Playlist items for Deck A will be rendered here by JavaScript -->
+                                <p class="empty-playlist-text">Drag songs here</p>
+                            </div>
+                        </div>
+                        <div id="deck-b-playlist-column" class="playlist-column">
+                            <div class="column-header" style="background-color: #3F5AD5;">Deck B</div>
+                            <div class="playlist-items-inner" id="deck-b-playlist-inner">
+                                <!-- Playlist items for Deck B will be rendered here by JavaScript -->
+                                <p class="empty-playlist-text">Drag songs here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- === JAVASCRIPT LIBRARIES & YOUR SCRIPT === -->
+        <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+        <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
+        <script src="https://unpkg.com/wavesurfer.js@7.7.0/dist/wavesurfer.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jsmediatags@3.9.7/dist/jsmediatags.min.js"></script>
+        <script src="https://w.soundcloud.com/player/api.js"></script>
+          <!-- Media Pipe detect selfie BG -->
+        <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1/selfie_segmentation.js"></script>
+        <!-- P5.JS -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script> -->
+
+
+        <!-- <script src="../static/js/musicLibrary.js"></script> -->
+        <script src="../static/backend/search.js"></script>
+        <script src="../static/backend/guest.js"></script>
+        <script src="../static/backend/dragdrop.js"></script>
+        <script src="../static/backend/libraryPreview.js"></script>
+        <script src="../static/backend/header_center.js"></script>
+        <script src="../static/backend/panelManager.js"></script>
+        <script src="../static/backend/visual-bg.js"></script>
+        <script src="../static/backend/popup.js"></script>
+        <script src="../static/backend/visual-interactive.js"></script>
+        <script>
+            console.log("Guest HTML loaded, JS should initialize now.");
+        </script>
+</body>
+
+</html>
